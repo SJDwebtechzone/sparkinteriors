@@ -7,12 +7,10 @@ export default function Home() {
 
       <section
         id="home"
-        className="flex h-screen items-center justify-center bg-black"
+        className="flex h-screen items-center justify-center"
       >
-        <h1 className="text-5xl font-bold text-white">
-          Spark Interiors
-        </h1>
       </section>
     </main>
   );
 }
+

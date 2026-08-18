@@ -4,11 +4,11 @@ import Image from "next/image";
 import { useState } from "react";
 
 const links = [
-  { name: "Home", href: "#home" },
-  { name: "Projects", href: "#projects" },
-  { name: "About", href: "#about" },
-  { name: "Services", href: "#services" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", href: "/#home" },
+  { name: "Projects", href: "/#projects" },
+  { name: "About", href: "/#about" },
+  { name: "Services", href: "/#services" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -19,7 +19,7 @@ export default function Navbar() {
       <nav className="navbar-container">
 
         {/* Logo */}
-        <a href="#home" className="navbar-logo">
+        <a href="/#home" className="navbar-logo">
           <Image
             src="/sparklogo.png"
             alt="Spark Interiors"
@@ -42,7 +42,7 @@ export default function Navbar() {
             </a>
           ))}
 
-          <a href="#contact" className="quote-button">
+          <a href="/contact" className="quote-button">
             Get a Quote
           </a>
         </div>
@@ -72,7 +72,7 @@ export default function Navbar() {
           ))}
 
           <a
-            href="#contact"
+            href="/contact"
             className="mobile-quote"
             onClick={() => setMenuOpen(false)}
           >
@@ -82,4 +82,4 @@ export default function Navbar() {
       )}
     </header>
   );
-}
+}

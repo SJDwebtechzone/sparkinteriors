@@ -1,6 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --color-spark-gold: #C5A880;
+  --color-spark-gold-dark: #A58963;
+  --color-spark-black: #0E0E0E;
+  --color-spark-charcoal: #1C1C1C;
+  --color-spark-cream: #F9F6F0;
+  --color-spark-cream-light: #FAF7F2;
+  --color-spark-gray: #707070;
+}
+
+body {
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+.font-serif-luxury {
+  font-family: var(--font-serif);
+}
+
+.glow-btn-spark {
+  border: 1px solid var(--color-spark-gold);
+  color: var(--color-spark-gold);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-btn-spark:hover {
+  background-color: var(--color-spark-gold);
+  color: #000000;
+  box-shadow: 0 0 15px rgba(197, 168, 128, 0.3);
+}
+
+.glow-btn-spark-filled {
+  background-color: var(--color-spark-gold);
+  color: #000000;
+  border: 1px solid var(--color-spark-gold);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-btn-spark-filled:hover {
+  background-color: transparent;
+  color: var(--color-spark-gold);
+  box-shadow: 0 0 15px rgba(197, 168, 128, 0.3);
+}
+
+/* Custom form inputs style matching screenshot */
+.brief-radio-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--color-spark-gray);
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease;
+}
+
+.brief-radio-input:checked {
+  border-color: var(--color-spark-gold);
+}
+
+.brief-radio-input:checked::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-spark-gold);
+  border-radius: 50%;
+  display: block;
+}
+
+/* Unique Transitions */
+@keyframes shutter-reveal-horizontal {
+  0% {
+    clip-path: inset(0% 50% 0% 50%);
+  }
+  100% {
+    clip-path: inset(0% 0% 0% 0%);
+  }
+}
+
+@keyframes text-reveal-up {
+  0% {
+    transform: translateY(105%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.animate-shutter-reveal {
+  animation: shutter-reveal-horizontal 1.6s cubic-bezier(0.85, 0, 0.15, 1) both;
+}
+
+.animate-text-reveal {
+  animation: text-reveal-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.brief-card-animate {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, background-color 0.4s ease;
+}
+
+.brief-card-animate:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.05);
+}
+
+.animate-spin-slow {
+  animation: spin 20s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* ================================
    NAVBAR
 ================================ */
+
+
 
 .navbar {
   position: fixed;
