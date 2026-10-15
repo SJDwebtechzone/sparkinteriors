@@ -1,33 +1,51 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const links = [
   { name: "Home", href: "/#home" },
-  { name: "Projects", href: "/#projects" },
-  { name: "About", href: "/#about" },
-  { name: "Services", href: "/#services" },
+  { name: "About", href: "/about" },
+  { name: "Projects", href: "/portfolio" },
+  { name: "Services", href: "/services" },
   { name: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 15);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="navbar">
+    <header className={`navbar ${scrolled ? "navbar-scrolled" : ""}`}>
       <nav className="navbar-container">
 
         {/* Logo */}
-        <a href="/#home" className="navbar-logo">
+        <a href="/#home" className="navbar-logo flex items-center gap-3.5 group">
           <Image
-            src="/sparklogo.png"
-            alt="Spark Interiors"
-            width={150}
-            height={60}
+            src="/spark-logo-transparent.png"
+            alt="Spark Interiors Logo"
+            width={72}
+            height={72}
             priority
-            className="logo-image"
+            unoptimized
+            className="w-[70px] h-[70px] object-contain transition-transform duration-300 group-hover:scale-105"
           />
+          <div className="flex flex-col justify-center leading-none select-none">
+            <span className="font-serif text-[22px] sm:text-[24px] tracking-[0.14em] font-bold text-[#F3C33D] drop-shadow-[0_2px_8px_rgba(243,195,61,0.25)]">
+              SPARK
+            </span>
+            <span className="text-[10px] sm:text-[10.5px] uppercase tracking-[0.32em] text-[#E2E8F0] font-semibold mt-1">
+              INTERIORS
+            </span>
+          </div>
         </a>
 
         {/* Desktop Navigation */}

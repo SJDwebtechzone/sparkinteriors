@@ -66,9 +66,8 @@ export default function ContactPage() {
       options: [
         "Apartment",
         "Villa / Bungalow",
-        "Office / Workspace",
-        "Hospitality",
-        "Retail / Commercial",
+        "Bespoke Residence",
+        "Outdoor & Landscape",
         "Other"
       ]
     },
@@ -173,7 +172,7 @@ export default function ContactPage() {
                className="absolute -left-24 bottom-[-180px] w-[520px] h-[520px] rounded-full opacity-35"
                style={{
                  background:
-                   "radial-gradient(circle, rgba(245,130,22,0.16) 0%, transparent 68%)",
+                   "radial-gradient(circle, rgba(213, 147, 24,0.16) 0%, transparent 68%)",
                }}
             />
 
@@ -212,13 +211,13 @@ export default function ContactPage() {
 
               {/* Eyebrow */}
               <div className="flex items-center gap-4 mb-8">
-                <span className="w-10 h-px bg-[#F58216]" />
+                <span className="w-10 h-px bg-[#D59318]" />
 
-                <span className="text-[#F58216] text-lg leading-none">
+                <span className="text-[#D59318] text-lg leading-none">
                   ✦
                 </span>
 
-                <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.28em] text-[#F58216] font-semibold">
+                <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.28em] text-[#D59318] font-semibold">
                   Let&apos;s create your space
                 </p>
               </div>
@@ -229,14 +228,14 @@ export default function ContactPage() {
                   Your vision.
                 </span>
 
-                <span className="block mt-3 text-[#F58216] italic animate-text-reveal [animation-delay:0.3s]">
+                <span className="block mt-3 text-[#D59318] italic animate-text-reveal [animation-delay:0.3s]">
                   Our expertise.
                 </span>
               </h1>
 
               {/* Decorative divider */}
               <div className="flex items-center gap-4 mt-9 mb-8">
-                <span className="w-20 h-px bg-[#F58216]" />
+                <span className="w-20 h-px bg-[#D59318]" />
 
                 <svg
                   width="52"
@@ -247,14 +246,14 @@ export default function ContactPage() {
                 >
                   <path
                     d="M1 8H19M33 8H51M19 8C22 8 24 5 26 2C28 5 30 8 33 8C30 8 28 11 26 14C24 11 22 8 19 8Z"
-                    stroke="#F58216"
+                    stroke="#D59318"
                     strokeWidth="1"
                   />
                 </svg>
               </div>
 
               {/* Description */}
-              <p className="max-w-lg text-neutral-900 text-base sm:text-lg leading-8 font-medium animate-text-reveal [animation-delay:0.45s]">
+              <p className="max-w-lg text-neutral-900 text-base sm:text-[17.5px] leading-8 font-medium animate-text-reveal [animation-delay:0.45s]">
                 Every beautiful space begins with a conversation.
                 Tell us what you imagine, and we&apos;ll turn it into
                 something beautifully yours.
@@ -264,7 +263,7 @@ export default function ContactPage() {
               <div className="mt-10 animate-text-reveal [animation-delay:0.6s]">
                 <a
                   href="#design-brief"
-                  className="group inline-flex items-center justify-center gap-5 min-w-[245px] px-8 py-4 bg-[#F58216] text-white rounded-sm text-[10px] font-bold tracking-[0.22em] uppercase shadow-[0_14px_35px_rgba(62,74,52,0.18)] hover:bg-[#E0720F] hover:-translate-y-0.5 transition-all duration-300"
+                  className="group inline-flex items-center justify-center gap-5 min-w-[245px] px-8 py-4 bg-[#D59318] text-white rounded-sm text-[10px] font-bold tracking-[0.22em] uppercase shadow-[0_14px_35px_rgba(62,74,52,0.18)] hover:bg-[#B87D0C] hover:-translate-y-0.5 transition-all duration-300"
                 >
                   <span>Start Your Project</span>
 
@@ -325,7 +324,7 @@ export default function ContactPage() {
             {/* =================================================
                 FLOATING SIGNATURE SEAL
             ================================================= */}
-            <div className="absolute left-0 sm:left-4 lg:left-[-12px] top-1/2 -translate-y-1/2 z-20 w-[112px] h-[112px] sm:w-[128px] sm:h-[128px] rounded-full bg-[#FBF9F4] border border-[#F58216]/60 shadow-[0_18px_45px_rgba(57,55,46,0.14)] flex items-center justify-center">
+            <div className="absolute left-0 sm:left-4 lg:left-[-12px] top-1/2 -translate-y-1/2 z-20 w-[112px] h-[112px] sm:w-[128px] sm:h-[128px] rounded-full bg-[#FBF9F4] border border-[#D59318]/60 shadow-[0_18px_45px_rgba(57,55,46,0.14)] flex items-center justify-center">
 
               <div className="absolute inset-2 rounded-full border border-[#D8C5A7]" />
 
@@ -342,7 +341,7 @@ export default function ContactPage() {
                 </defs>
 
                 <text
-                  fill="#F58216"
+                  fill="#D59318"
                   fontSize="6.7"
                   letterSpacing="1.4"
                   className="uppercase font-semibold"
@@ -353,7 +352,7 @@ export default function ContactPage() {
                 </text>
               </svg>
 
-              <div className="relative z-10 flex flex-col items-center justify-center text-[#F58216]">
+              <div className="relative z-10 flex flex-col items-center justify-center text-[#D59318]">
                 <span className="text-2xl leading-none">✦</span>
                 <span className="text-[7px] uppercase tracking-[0.18em] mt-1">
                   Spark
@@ -364,7 +363,7 @@ export default function ContactPage() {
             {/* Small floating material card */}
             <div className="absolute bottom-8 right-5 sm:right-8 lg:right-10 z-20 hidden sm:block">
               <div className="bg-[#FBF9F4]/95 backdrop-blur-md border border-white/70 shadow-[0_15px_35px_rgba(42,43,37,0.12)] px-5 py-4 min-w-[185px]">
-                <p className="text-[8px] uppercase tracking-[0.22em] text-[#F58216] font-bold">
+                <p className="text-[8px] uppercase tracking-[0.22em] text-[#D59318] font-bold">
                   The Spark Approach
                 </p>
 
@@ -377,7 +376,7 @@ export default function ContactPage() {
             {/* Vertical side label */}
             <div className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 hidden xl:block">
               <p className="rotate-90 origin-center text-[8px] uppercase tracking-[0.35em] text-white/80 whitespace-nowrap">
-                Residential • Commercial • Bespoke
+                Residential • Landscape • Bespoke
               </p>
             </div>
           </div>
@@ -397,7 +396,7 @@ export default function ContactPage() {
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full blur-3xl opacity-35"
             style={{
               background:
-                "radial-gradient(circle, rgba(245,130,22,0.14) 0%, transparent 65%)",
+                "radial-gradient(circle, rgba(213, 147, 24,0.14) 0%, transparent 65%)",
             }}
           />
 
@@ -454,13 +453,13 @@ export default function ContactPage() {
           {/* Header */}
           <div className="text-center mb-14 sm:mb-16">
             <div className="flex items-center justify-center gap-3 mb-5">
-              <span className="w-10 h-px bg-[#F58216]" />
-              <span className="text-[#F58216] text-lg">✦</span>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-[#A67C49] font-bold">
+              <span className="w-10 h-px bg-[#D59318]" />
+              <span className="text-[#D59318] text-lg">✦</span>
+              <p className="text-[12px] uppercase tracking-[0.3em] text-[#A67C49] font-bold">
                 Fill In Your Design Brief
               </p>
-              <span className="text-[#F58216] text-lg">✦</span>
-              <span className="w-10 h-px bg-[#F58216]" />
+              <span className="text-[#D59318] text-lg">✦</span>
+              <span className="w-10 h-px bg-[#D59318]" />
             </div>
 
             <h2 className="font-serif-luxury text-4xl sm:text-5xl lg:text-[58px] leading-tight text-[#29352D] font-normal">
@@ -469,11 +468,11 @@ export default function ContactPage() {
 
             <div className="flex justify-center items-center gap-3 mt-5">
               <span className="w-16 h-px bg-[#C39A64]/60" />
-              <span className="text-[#F58216] text-sm">❧</span>
+              <span className="text-[#D59318] text-sm">❧</span>
               <span className="w-16 h-px bg-[#C39A64]/60" />
             </div>
 
-            <p className="max-w-xl mx-auto mt-6 text-sm sm:text-base leading-7 text-neutral-800 font-semibold">
+            <p className="max-w-xl mx-auto mt-6 text-base sm:text-[17.5px] leading-7 text-neutral-800 font-semibold">
               Help us understand your vision and preferences so we can create a
               space that truly reflects you.
             </p>
@@ -496,7 +495,7 @@ export default function ContactPage() {
                   }`}
                 >
                   <div
-                    className={`absolute left-0 top-0 bottom-0 w-[3px] bg-[#F58216] transition-opacity duration-500 ${
+                    className={`absolute left-0 top-0 bottom-0 w-[3px] bg-[#D59318] transition-opacity duration-500 ${
                       isExpanded ? "opacity-100" : "opacity-0"
                     }`}
                   />
@@ -512,7 +511,7 @@ export default function ContactPage() {
                       <div
                         className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
                           isExpanded
-                            ? "bg-[#F58216] text-white shadow-md"
+                            ? "bg-[#D59318] text-white shadow-md"
                             : "bg-[#EEF0E9] text-[#65715B]"
                         }`}
                       >
@@ -527,8 +526,8 @@ export default function ContactPage() {
                         </h3>
 
                         {selectedVal && (
-                          <p className="flex items-center gap-2 mt-1.5 text-[9px] uppercase tracking-[0.15em] text-[#A67C49] font-bold">
-                            <span className="w-4 h-4 rounded-full bg-[#F58216] text-white flex items-center justify-center text-[8px]">
+                          <p className="flex items-center gap-2 mt-1.5 text-[11px] uppercase tracking-[0.15em] text-[#A67C49] font-bold">
+                            <span className="w-4 h-4 rounded-full bg-[#D59318] text-white flex items-center justify-center text-[8px]">
                               ✓
                             </span>
                             {selectedVal}
@@ -540,7 +539,7 @@ export default function ContactPage() {
                     <span
                       className={`w-8 h-8 rounded-full border flex items-center justify-center shrink-0 transition-all duration-300 ${
                         isExpanded
-                          ? "border-[#F58216] text-[#F58216] rotate-180"
+                          ? "border-[#D59318] text-[#D59318] rotate-180"
                           : "border-[#DED8CD] text-[#8B8B83]"
                       }`}
                     >
@@ -575,7 +574,7 @@ export default function ContactPage() {
                               }
                               className={`group/option relative min-h-[64px] px-5 rounded-xl border text-left transition-all duration-300 flex items-center justify-between ${
                                 isSelected
-                                  ? "bg-[#F58216] border-[#F58216] text-white shadow-lg"
+                                  ? "bg-[#D59318] border-[#D59318] text-white shadow-lg"
                                   : "bg-[#FCFAF6] border-[#E4DDD2] text-neutral-800 hover:border-[#BDA77F] hover:bg-white font-semibold"
                               }`}
                             >
@@ -584,7 +583,7 @@ export default function ContactPage() {
                                   className={`w-9 h-9 rounded-full flex items-center justify-center border text-sm ${
                                     isSelected
                                       ? "border-white/30 bg-white/10 text-white"
-                                      : "border-[#DDD2C0] text-[#F58216]"
+                                      : "border-[#DDD2C0] text-[#D59318]"
                                   }`}
                                 >
                                   {index === 0 && "⌂"}
@@ -601,7 +600,7 @@ export default function ContactPage() {
                               </div>
 
                               {isSelected && (
-                                <span className="w-6 h-6 rounded-full bg-white text-[#F58216] flex items-center justify-center text-xs font-bold">
+                                <span className="w-6 h-6 rounded-full bg-white text-[#D59318] flex items-center justify-center text-xs font-bold">
                                   ✓
                                 </span>
                               )}
@@ -624,7 +623,7 @@ export default function ContactPage() {
               }`}
             >
               <div
-                className={`absolute left-0 top-0 bottom-0 w-[3px] bg-[#F58216] ${
+                className={`absolute left-0 top-0 bottom-0 w-[3px] bg-[#D59318] ${
                   expandedStep === 4 ? "opacity-100" : "opacity-0"
                 }`}
               />
@@ -640,7 +639,7 @@ export default function ContactPage() {
                   <div
                     className={`w-12 h-12 rounded-full flex items-center justify-center ${
                       expandedStep === 4
-                        ? "bg-[#F58216] text-white"
+                        ? "bg-[#D59318] text-white"
                         : "bg-[#EEF0E9] text-[#65715B]"
                     }`}
                   >
@@ -653,7 +652,7 @@ export default function ContactPage() {
                     </h3>
 
                     {briefState.vision && (
-                      <p className="text-[9px] uppercase tracking-[0.15em] text-[#A67C49] font-bold mt-1">
+                      <p className="text-[11px] uppercase tracking-[0.15em] text-[#A67C49] font-bold mt-1">
                         ✓ Design notes added
                       </p>
                     )}
@@ -663,7 +662,7 @@ export default function ContactPage() {
                 <span
                   className={`w-8 h-8 rounded-full border flex items-center justify-center transition-transform duration-300 ${
                     expandedStep === 4
-                      ? "rotate-180 border-[#F58216] text-[#F58216]"
+                      ? "rotate-180 border-[#D59318] text-[#D59318]"
                       : "border-[#DED8CD] text-[#8B8B83]"
                   }`}
                 >
@@ -687,7 +686,7 @@ export default function ContactPage() {
                     placeholder="Tell us about your lifestyle, ideas, layout preferences or anything you'd like our designers to know..."
                     value={briefState.vision}
                     onChange={handleTextChange}
-                    className="w-full min-h-[150px] rounded-xl bg-[#FCFAF6] border border-[#E4DDD2] px-5 py-4 text-sm text-[#3F443F] placeholder:text-[#AAA69E] focus:outline-none focus:border-[#F58216] focus:ring-1 focus:ring-[#F58216]/20 resize-none transition-all"
+                    className="w-full min-h-[150px] rounded-xl bg-[#FCFAF6] border border-[#E4DDD2] px-5 py-4 text-sm text-[#3F443F] placeholder:text-[#AAA69E] focus:outline-none focus:border-[#D59318] focus:ring-1 focus:ring-[#D59318]/20 resize-none transition-all"
                   />
 
                   <div className="flex justify-between mt-2">
@@ -741,7 +740,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={formSubmitted}
-                className="group min-w-[230px] rounded-xl bg-[#F58216] hover:bg-[#E0720F] disabled:opacity-50 text-white px-8 py-4 text-[10px] font-bold tracking-[0.2em] uppercase flex items-center justify-center gap-4 shadow-[0_12px_30px_rgba(57,70,49,0.18)] hover:shadow-[0_18px_35px_rgba(57,70,49,0.25)] transition-all duration-300 cursor-pointer"
+                className="group min-w-[230px] rounded-xl bg-[#D59318] hover:bg-[#B87D0C] disabled:opacity-50 text-white px-8 py-4 text-[10px] font-bold tracking-[0.2em] uppercase flex items-center justify-center gap-4 shadow-[0_12px_30px_rgba(57,70,49,0.18)] hover:shadow-[0_18px_35px_rgba(57,70,49,0.25)] transition-all duration-300 cursor-pointer"
               >
                 <span>
                   {formSubmitted ? "Submitting..." : "Submit Design Brief"}
@@ -780,7 +779,7 @@ export default function ContactPage() {
       className="absolute right-0 top-0 w-[550px] h-[700px] opacity-35 blur-3xl"
       style={{
         background:
-          "radial-gradient(circle, rgba(245,130,22,0.12) 0%, transparent 70%)",
+          "radial-gradient(circle, rgba(213, 147, 24,0.12) 0%, transparent 70%)",
       }}
     />
 
@@ -877,7 +876,7 @@ export default function ContactPage() {
 
             <span className="w-12 h-px bg-[#B58A55]" />
 
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#A67C49] font-semibold">
+            <p className="text-[12px] uppercase tracking-[0.3em] text-[#A67C49] font-semibold">
               Design Concierge
             </p>
 
@@ -890,14 +889,14 @@ export default function ContactPage() {
 
             <br />
 
-            <span className="italic text-[#F58216]">
+            <span className="italic text-[#D59318]">
               hear from you.
             </span>
 
           </h2>
 
 
-          <p className="mt-7 max-w-[390px] text-sm sm:text-[15px] leading-7 text-neutral-800 font-medium">
+          <p className="mt-7 max-w-[390px] text-base sm:text-[17.5px] leading-7 text-neutral-800 font-medium">
             Share your ideas, ask questions, or simply say hello —
             our team is here to help you create something
             extraordinary.
@@ -912,7 +911,7 @@ export default function ContactPage() {
           {/* Phone */}
           <div className="flex items-center gap-4 group">
 
-            <div className="w-12 h-12 rounded-full border border-[#E1D5C3] bg-[#FCFAF6] flex items-center justify-center text-[#F58216] transition-all duration-300 group-hover:bg-[#F58216] group-hover:text-white">
+            <div className="w-12 h-12 rounded-full border border-[#E1D5C3] bg-[#FCFAF6] flex items-center justify-center text-[#D59318] transition-all duration-300 group-hover:bg-[#D59318] group-hover:text-white">
 
               <svg
                 className="w-[18px] h-[18px]"
@@ -932,12 +931,12 @@ export default function ContactPage() {
 
 
             <div>
-              <p className="text-[9px] uppercase tracking-[0.22em] text-[#F58216] font-semibold">
+              <p className="text-[9px] uppercase tracking-[0.22em] text-[#D59318] font-semibold">
                 Call Us
               </p>
 
               <p className="text-sm text-[#373B36] mt-1">
-                +91 95000 12200
+                +91 95000 12200 / +91 72000 80418
               </p>
             </div>
 
@@ -947,7 +946,7 @@ export default function ContactPage() {
           {/* Email */}
           <div className="flex items-center gap-4 group">
 
-            <div className="w-12 h-12 rounded-full border border-[#E1D5C3] bg-[#FCFAF6] flex items-center justify-center text-[#F58216] transition-all duration-300 group-hover:bg-[#F58216] group-hover:text-white">
+            <div className="w-12 h-12 rounded-full border border-[#E1D5C3] bg-[#FCFAF6] flex items-center justify-center text-[#D59318] transition-all duration-300 group-hover:bg-[#D59318] group-hover:text-white">
 
               <svg
                 className="w-[18px] h-[18px]"
@@ -968,13 +967,13 @@ export default function ContactPage() {
 
             <div>
 
-              <p className="text-[9px] uppercase tracking-[0.22em] text-[#F58216] font-semibold">
+              <p className="text-[9px] uppercase tracking-[0.22em] text-[#D59318] font-semibold">
                 Email Us
               </p>
 
               <a
                 href="mailto:hello@sparkinteriors.com"
-                className="text-sm text-[#373B36] mt-1 block hover:text-[#F58216] transition-colors"
+                className="text-sm text-[#373B36] mt-1 block hover:text-[#D59318] transition-colors"
               >
                 hello@sparkinteriors.com
               </a>
@@ -987,7 +986,7 @@ export default function ContactPage() {
           {/* Address */}
           <div className="flex items-center gap-4 group">
 
-            <div className="w-12 h-12 rounded-full border border-[#E1D5C3] bg-[#FCFAF6] flex items-center justify-center text-[#F58216]">
+            <div className="w-12 h-12 rounded-full border border-[#E1D5C3] bg-[#FCFAF6] flex items-center justify-center text-[#D59318]">
 
               <svg
                 className="w-[18px] h-[18px]"
@@ -1015,8 +1014,8 @@ export default function ContactPage() {
 
             <div>
 
-              <p className="text-[9px] uppercase tracking-[0.22em] text-[#F58216] font-semibold">
-                Studio Address
+              <p className="text-[9px] uppercase tracking-[0.22em] text-[#D59318] font-semibold">
+                Office Address
               </p>
 
               <p className="text-xs leading-5 text-neutral-900 mt-1 max-w-[290px] font-semibold">
@@ -1031,7 +1030,7 @@ export default function ContactPage() {
           {/* Working hours */}
           <div className="flex items-center gap-4 group">
 
-            <div className="w-12 h-12 rounded-full border border-[#E1D5C3] bg-[#FCFAF6] flex items-center justify-center text-[#F58216]">
+            <div className="w-12 h-12 rounded-full border border-[#E1D5C3] bg-[#FCFAF6] flex items-center justify-center text-[#D59318]">
 
               <svg
                 className="w-[18px] h-[18px]"
@@ -1052,7 +1051,7 @@ export default function ContactPage() {
 
             <div>
 
-              <p className="text-[9px] uppercase tracking-[0.22em] text-[#F58216] font-semibold">
+              <p className="text-[9px] uppercase tracking-[0.22em] text-[#D59318] font-semibold">
                 Working Hours
               </p>
 
@@ -1085,7 +1084,7 @@ export default function ContactPage() {
               SPARK INTERIORS
             </p>
 
-            <p className="text-[9px] tracking-[0.12em] uppercase text-[#F58216] mt-1">
+            <p className="text-[9px] tracking-[0.12em] uppercase text-[#D59318] mt-1">
               Curated spaces. Timeless living.
             </p>
 
@@ -1121,12 +1120,12 @@ export default function ContactPage() {
         ))}
 
         {/* Soft overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-[#F58216]/5 z-20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-[#D59318]/5 z-20 pointer-events-none" />
 
         {/* Left/Right Arrow controls - visible on hover */}
         <button
           onClick={handlePrev}
-          className="absolute left-5 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/90 hover:bg-white text-[#F58216] flex items-center justify-center shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer opacity-0 group-hover:opacity-100"
+          className="absolute left-5 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/90 hover:bg-white text-[#D59318] flex items-center justify-center shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer opacity-0 group-hover:opacity-100"
           aria-label="Previous slide"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -1136,7 +1135,7 @@ export default function ContactPage() {
 
         <button
           onClick={handleNext}
-          className="absolute right-5 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/90 hover:bg-white text-[#F58216] flex items-center justify-center shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer opacity-0 group-hover:opacity-100"
+          className="absolute right-5 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/90 hover:bg-white text-[#D59318] flex items-center justify-center shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer opacity-0 group-hover:opacity-100"
           aria-label="Next slide"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -1151,7 +1150,7 @@ export default function ContactPage() {
               key={idx}
               onClick={() => setCurrentSlide(idx)}
               className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                idx === currentSlide ? "bg-[#F58216] w-6" : "bg-white/50 hover:bg-white/80"
+                idx === currentSlide ? "bg-[#D59318] w-6" : "bg-white/50 hover:bg-white/80"
               }`}
               aria-label={`Go to slide ${idx + 1}`}
             />
@@ -1183,25 +1182,25 @@ export default function ContactPage() {
 
             <path
               d="M40 270C100 220 130 130 240 30"
-              stroke="#F58216"
+              stroke="#D59318"
               strokeWidth="1"
             />
 
             <path
               d="M105 210C75 190 60 165 58 140"
-              stroke="#F58216"
+              stroke="#D59318"
               strokeWidth="1"
             />
 
             <path
               d="M145 160C175 150 195 130 205 105"
-              stroke="#F58216"
+              stroke="#D59318"
               strokeWidth="1"
             />
 
             <path
               d="M185 105C215 100 235 80 242 55"
-              stroke="#F58216"
+              stroke="#D59318"
               strokeWidth="1"
             />
 
@@ -1248,31 +1247,31 @@ export default function ContactPage() {
                 cx="22.5"
                 cy="22.5"
                 r="20"
-                stroke="#F58216"
+                stroke="#D59318"
                 strokeWidth="1"
               />
 
               <path
                 d="M22.5 12C25 17 28 19 33 20"
-                stroke="#F58216"
+                stroke="#D59318"
                 strokeWidth="1.2"
               />
 
               <path
                 d="M22.5 12C20 17 17 19 12 20"
-                stroke="#F58216"
+                stroke="#D59318"
                 strokeWidth="1.2"
               />
 
               <path
                 d="M22.5 33C25 28 28 26 33 25"
-                stroke="#F58216"
+                stroke="#D59318"
                 strokeWidth="1.2"
               />
 
               <path
                 d="M22.5 33C20 28 17 26 12 25"
-                stroke="#F58216"
+                stroke="#D59318"
                 strokeWidth="1.2"
               />
 
@@ -1280,7 +1279,7 @@ export default function ContactPage() {
                 cx="22.5"
                 cy="22.5"
                 r="3"
-                fill="#F58216"
+                fill="#D59318"
               />
 
             </svg>
@@ -1288,8 +1287,8 @@ export default function ContactPage() {
           </div>
 
 
-          <p className="text-[10px] uppercase tracking-[0.28em] text-[#F58216] font-bold mb-4">
-            Visit Our Studio
+          <p className="text-[10px] uppercase tracking-[0.28em] text-[#D59318] font-bold mb-4">
+            Visit Our Office
           </p>
 
 
@@ -1299,18 +1298,18 @@ export default function ContactPage() {
 
             <br />
 
-            <span className="italic text-[#F58216]">
+            <span className="italic text-[#D59318]">
               coffee & ideas.
             </span>
 
           </h3>
 
 
-          <div className="w-12 h-px bg-[#F58216] mt-7 mb-6" />
+          <div className="w-12 h-px bg-[#D59318] mt-7 mb-6" />
 
 
           <p className="text-sm leading-6 text-[#72756D] font-light">
-            Experience our studio, explore materials and
+            Experience our work, explore materials and
             finishes, and discuss your project in detail
             with our design experts.
           </p>
@@ -1319,11 +1318,11 @@ export default function ContactPage() {
           {/* CTA */}
           <Link
             href="mailto:hello@sparkinteriors.com"
-            className="group mt-8 w-full bg-[#F58216] hover:bg-[#E0720F] text-white rounded-xl px-5 py-4 flex items-center justify-between transition-all duration-300 shadow-lg"
+            className="group mt-8 w-full bg-[#D59318] hover:bg-[#B87D0C] text-white rounded-xl px-5 py-4 flex items-center justify-between transition-all duration-300 shadow-lg"
           >
 
             <span className="text-[10px] uppercase tracking-[0.16em] font-semibold">
-              Book a Studio Visit
+              Book a Consultation
             </span>
 
             <span className="text-lg transform group-hover:translate-x-1 transition-transform duration-300">
@@ -1336,7 +1335,7 @@ export default function ContactPage() {
           {/* Appointment */}
           <div className="mt-8 pt-6 border-t border-[#E4DCCE] flex items-center gap-4">
 
-            <div className="w-11 h-11 rounded-full border border-[#DCCEBB] flex items-center justify-center text-[#F58216]">
+            <div className="w-11 h-11 rounded-full border border-[#DCCEBB] flex items-center justify-center text-[#D59318]">
 
               <svg
                 className="w-5 h-5"
@@ -1424,15 +1423,15 @@ export default function ContactPage() {
         {/* Call Button */}
         <a
           href="tel:+919500012200"
-          className="group relative w-12 h-12 rounded-full bg-white border border-[#EBE8E2] text-[#F58216] hover:bg-[#F58216] hover:text-white flex items-center justify-center shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-105 active:scale-95"
-          aria-label="Call Studio"
+          className="group relative w-12 h-12 rounded-full bg-white border border-[#EBE8E2] text-[#D59318] hover:bg-[#D59318] hover:text-white flex items-center justify-center shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-105 active:scale-95"
+          aria-label="Call Us"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
           </svg>
           {/* Tooltip */}
           <span className="absolute right-14 top-1/2 -translate-y-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-neutral-900 text-white text-[9px] uppercase tracking-wider font-semibold py-1.5 px-3 rounded-md shadow-lg pointer-events-none whitespace-nowrap">
-            Call Studio
+            Call Us
           </span>
         </a>
 
