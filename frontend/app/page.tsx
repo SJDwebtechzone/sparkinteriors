@@ -1807,63 +1807,36 @@ function FAQ() {
 function ClosingCTA() {
   return (
     <section className="py-14 sm:py-20 px-4 sm:px-10 lg:px-16 max-w-[1440px] mx-auto">
-      <div className="max-w-[1360px] mx-auto rounded-[28px] sm:rounded-[44px] overflow-hidden bg-[#021A26] border border-[#E1D3C1]/25 shadow-2xl relative">
+      <div className="max-w-[1360px] mx-auto rounded-[28px] sm:rounded-[44px] overflow-hidden bg-[#021A26] border border-[#E1D3C1]/25 shadow-2xl relative group">
         
-        {/* Full Showcase with Blank TV & Integrated Floating Text Model Inside Image */}
+        {/* Full Showcase with Modern Architectural Interior & Highlight Callouts */}
         <div className="relative w-full aspect-[16/11] sm:aspect-[16/9] overflow-hidden select-none">
-          {/* 100% Bright, Crisp Architectural Living Room Photography */}
+          {/* 100% Bright, Crisp Modern Interior Photography */}
           <Image
-            src="/services-cta.jpg"
-            alt="Spark Interiors bespoke living room with custom marble feature wall"
+            src="/home-residential-luxury-tv.jpg"
+            alt="Spark Interiors modern architectural residence with custom media wall and ambient cove ceiling"
             fill
             unoptimized
             priority
-            className="object-cover object-center brightness-100 contrast-[1.02]"
+            className="object-cover object-center brightness-100 contrast-[1.02] scale-[1.0] group-hover:scale-[1.02] transition-transform duration-[3s] ease-out"
           />
 
-          {/* Wall-Mounted Blank OLED TV on the Backlit Marble Panel */}
-          <div
-            className="absolute z-10 rounded-[2px] sm:rounded-[3px] border-[1.5px] sm:border-[2.5px] border-[#18181b] bg-[#0c0d11] overflow-hidden shadow-[0_12px_28px_rgba(0,0,0,0.85),0_2px_8px_rgba(0,0,0,0.7)] pointer-events-none"
-            style={{
-              left: '33.3%',
-              top: '33.8%',
-              width: '23.5%',
-              aspectRatio: '16 / 9',
-            }}
-          >
-            {/* Deep Piano-Black Glossy OLED Screen */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#0a0a0c] via-[#101217] to-[#181a22]" />
-
-            {/* Subtle Diagonal Glass Reflection Glare */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-white/[0.08]" />
-
-            {/* Micro Standby Red/Amber Power LED Indicator */}
-            <div className="absolute bottom-1 right-1.5 w-[2px] h-[2px] sm:w-[3px] sm:h-[3px] rounded-full bg-red-500/80 shadow-[0_0_2px_red]" />
-          </div>
-
-          {/* Discreet Architectural Label (Top Right) */}
-          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 pointer-events-none">
-            <span className="px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-[#FAF6F0] text-[9px] sm:text-[10px] uppercase tracking-[0.22em] font-semibold shadow-lg">
-              ✦ Interior Architecture
-            </span>
-          </div>
-
-          {/* Text Model INSIDE The Image: Floating Frosted Glass Architectural Dock */}
+          {/* Modern Text Model INSIDE The Image: Floating Frosted Glass Architectural Dock */}
           <div className="absolute bottom-4 sm:bottom-7 left-4 sm:left-8 right-4 sm:right-8 z-20">
             <div className="max-w-[1040px] mx-auto bg-[#021A26]/85 backdrop-blur-xl border border-[#E1D3C1]/35 rounded-2xl sm:rounded-full px-6 sm:px-10 py-4 sm:py-5 shadow-[0_20px_50px_rgba(0,0,0,0.75)] flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-8">
               
-              {/* Left Column: Eyebrow + Headline */}
+              {/* Left Column: Eyebrow + Modern Headline */}
               <div className="text-center md:text-left">
                 <div className="flex items-center justify-center md:justify-start gap-2 mb-1.5">
                   <span className="w-4 h-[1px] bg-[#D59318]" />
                   <span className="text-[#F3C33D] text-[10px]">✦</span>
                   <span className="text-[10px] uppercase tracking-[0.28em] text-[#F3C33D] font-bold">
-                    Let's Begin
+                    Designed for Living
                   </span>
                   <span className="w-4 h-[1px] bg-[#D59318]" />
                 </div>
                 <h3 className="font-serif text-lg sm:text-2xl text-white font-normal tracking-tight">
-                  Every space has a story <span className="italic font-serif text-[#F3C33D]">waiting to be told.</span>
+                  Thoughtful details. <span className="italic font-serif text-[#F3C33D]">Timeless modern luxury.</span>
                 </h3>
               </div>
 
@@ -1871,7 +1844,7 @@ function ClosingCTA() {
               <div className="flex items-center gap-3 sm:gap-4 shrink-0">
                 <Link
                   href="/contact"
-                  className="bg-[#F58216] hover:bg-[#D76D0E] text-white text-[11px] sm:text-xs font-bold tracking-[0.2em] px-6 sm:px-8 py-3 sm:py-3.5 rounded-full shadow-lg hover:shadow-orange-500/30 active:scale-95 transition-all uppercase cursor-pointer"
+                  className="bg-[#F58216] hover:bg-[#D76D0E] text-white text-[11px] sm:text-xs font-bold tracking-[0.2em] px-7 sm:px-8 py-3.5 rounded-full shadow-lg hover:shadow-orange-500/30 active:scale-95 transition-all uppercase cursor-pointer"
                 >
                   Book a consultation
                 </Link>
@@ -1879,7 +1852,7 @@ function ClosingCTA() {
                   href="/portfolio"
                   className="group inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider text-white/90 hover:text-[#F3C33D] transition-colors py-2 uppercase cursor-pointer"
                 >
-                  <span>Projects</span>
+                  <span>Explore Projects</span>
                   <span className="transform group-hover:translate-x-1 transition-transform">→</span>
                 </Link>
               </div>
