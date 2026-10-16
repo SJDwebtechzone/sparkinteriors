@@ -27,15 +27,6 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-// Root & Health Check Endpoints
-app.get("/", (req, res) => {
-  res.json({ status: "ok", message: "Spark Interiors Backend API is running live on Railway!", timestamp: new Date().toISOString() });
-});
-
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", backend: "Railway", timestamp: new Date().toISOString() });
-});
-
 // Setup file uploads directly to frontend/public/uploads
 const uploadDir = path.join(__dirname, "../frontend/public/uploads");
 if (!fs.existsSync(uploadDir)) {

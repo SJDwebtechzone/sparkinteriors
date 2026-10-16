@@ -63,7 +63,7 @@ export default function HeroBanner() {
     }
 
     // 2. Fetch latest configuration from backend API
-    fetch("/api/hero")
+    fetch("http://localhost:5000/api/hero")
       .then((res) => {
         if (!res.ok) throw new Error("Network response not ok");
         return res.json();

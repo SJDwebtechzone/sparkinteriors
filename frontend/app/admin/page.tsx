@@ -179,20 +179,20 @@ export default function AdminDashboardPage() {
 
   const fetchData = async () => {
     try {
-      const projRes = await fetch("https://ramyi1010-production.up.railway.app/api/projects");
+      const projRes = await fetch("http://localhost:5000/api/projects");
       const projData = await projRes.json();
       if (Array.isArray(projData)) setProjects(projData);
 
-      const servRes = await fetch("https://ramyi1010-production.up.railway.app/api/services");
+      const servRes = await fetch("http://localhost:5000/api/services");
       const servData = await servRes.json();
       if (Array.isArray(servData)) setServices(servData);
 
-      const testRes = await fetch("https://ramyi1010-production.up.railway.app/api/testimonials");
+      const testRes = await fetch("http://localhost:5000/api/testimonials");
       const testData = await testRes.json();
       if (Array.isArray(testData)) setTestimonials(testData);
 
       // Load settings
-      const settingsRes = await fetch("https://ramyi1010-production.up.railway.app/api/settings");
+      const settingsRes = await fetch("http://localhost:5000/api/settings");
       if (settingsRes.ok) {
         const settingsData = await settingsRes.json();
         if (settingsData.username) {
@@ -207,7 +207,7 @@ export default function AdminDashboardPage() {
 
       // Load Hero Banner settings
       try {
-        const heroRes = await fetch("https://ramyi1010-production.up.railway.app/api/hero");
+        const heroRes = await fetch("http://localhost:5000/api/hero");
         if (heroRes.ok) {
           const heroData = await heroRes.json();
           if (heroData.type) setHeroType(heroData.type);
@@ -262,7 +262,7 @@ export default function AdminDashboardPage() {
     setRecoverySuccess("");
     setIsOtpLoading(true);
     try {
-      const res = await fetch("https://ramyi1010-production.up.railway.app/api/settings/forgot-password", {
+      const res = await fetch("http://localhost:5000/api/settings/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: recoveryEmail })
@@ -295,7 +295,7 @@ export default function AdminDashboardPage() {
     setRecoverySuccess("");
     setIsOtpLoading(true);
     try {
-      const res = await fetch("https://ramyi1010-production.up.railway.app/api/settings/verify-otp", {
+      const res = await fetch("http://localhost:5000/api/settings/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: recoveryEmail, otp: otpCode })
@@ -328,7 +328,7 @@ export default function AdminDashboardPage() {
     }
 
     try {
-      const res = await fetch("https://ramyi1010-production.up.railway.app/api/settings/reset-password", {
+      const res = await fetch("http://localhost:5000/api/settings/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: recoveryEmail, password: newPassword })
@@ -364,7 +364,7 @@ export default function AdminDashboardPage() {
       formData.append("image", file);
 
       try {
-        const res = await fetch("https://ramyi1010-production.up.railway.app/api/upload", {
+        const res = await fetch("http://localhost:5000/api/upload", {
           method: "POST",
           body: formData
         });
@@ -448,7 +448,7 @@ export default function AdminDashboardPage() {
     }
 
     try {
-      const res = await fetch("https://ramyi1010-production.up.railway.app/api/hero", {
+      const res = await fetch("http://localhost:5000/api/hero", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -477,7 +477,7 @@ export default function AdminDashboardPage() {
     formData.append("file", file);
 
     try {
-      const res = await fetch("https://ramyi1010-production.up.railway.app/api/upload", {
+      const res = await fetch("http://localhost:5000/api/upload", {
         method: "POST",
         body: formData
       });
@@ -543,8 +543,8 @@ export default function AdminDashboardPage() {
 
     try {
       const url = editingId 
-        ? `https://ramyi1010-production.up.railway.app/api/projects/${editingId}`
-        : "https://ramyi1010-production.up.railway.app/api/projects";
+        ? `http://localhost:5000/api/projects/${editingId}`
+        : "http://localhost:5000/api/projects";
       const method = editingId ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -590,8 +590,8 @@ export default function AdminDashboardPage() {
 
     try {
       const url = editingId 
-        ? `https://ramyi1010-production.up.railway.app/api/services/${editingId}`
-        : "https://ramyi1010-production.up.railway.app/api/services";
+        ? `http://localhost:5000/api/services/${editingId}`
+        : "http://localhost:5000/api/services";
       const method = editingId ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -643,8 +643,8 @@ export default function AdminDashboardPage() {
 
     try {
       const url = editingId 
-        ? `https://ramyi1010-production.up.railway.app/api/testimonials/${editingId}`
-        : "https://ramyi1010-production.up.railway.app/api/testimonials";
+        ? `http://localhost:5000/api/testimonials/${editingId}`
+        : "http://localhost:5000/api/testimonials";
       const method = editingId ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -672,7 +672,7 @@ export default function AdminDashboardPage() {
   // Toggle testimonial approval status
   const handleToggleApprove = async (id: string) => {
     try {
-      const res = await fetch(`https://ramyi1010-production.up.railway.app/api/testimonials/${id}/toggle-approve`, {
+      const res = await fetch(`http://localhost:5000/api/testimonials/${id}/toggle-approve`, {
         method: "PATCH"
       });
       if (res.ok) {
@@ -696,7 +696,7 @@ export default function AdminDashboardPage() {
     }
 
     try {
-      const res = await fetch("https://ramyi1010-production.up.railway.app/api/settings", {
+      const res = await fetch("http://localhost:5000/api/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -778,7 +778,7 @@ export default function AdminDashboardPage() {
   const handleDeleteItem = async (id: string, type: "projects" | "services" | "testimonials") => {
     if (window.confirm(`Are you sure you want to delete this ${type.slice(0, -1)}?`)) {
       try {
-        const res = await fetch(`https://ramyi1010-production.up.railway.app/api/${type}/${id}`, {
+        const res = await fetch(`http://localhost:5000/api/${type}/${id}`, {
           method: "DELETE"
         });
         if (res.ok) {
@@ -804,7 +804,7 @@ export default function AdminDashboardPage() {
   const handleResetDatabase = async () => {
     if (window.confirm("Are you sure you want to reset the database to original seed defaults? This deletes all custom updates.")) {
       try {
-        const res = await fetch("https://ramyi1010-production.up.railway.app/api/reset", {
+        const res = await fetch("http://localhost:5000/api/reset", {
           method: "POST"
         });
         if (res.ok) {

@@ -331,7 +331,7 @@ function PortfolioContent() {
     window.addEventListener("spark_category_change", handleCustomCategory);
 
     // Fetch projects only for portfolio page
-    fetch("/api/projects")
+    fetch("http://localhost:5000/api/projects")
       .then((r) => r.json())
       .then((projectsResult) => {
         if (Array.isArray(projectsResult) && projectsResult.length > 0) {
