@@ -1019,7 +1019,7 @@ function ServicesStrip() {
   const [list, setList] = useState<any[]>([]);
 
   const fetchServices = () => {
-    fetch("http://localhost:5000/api/services")
+    fetch("/api/services")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
@@ -1319,7 +1319,7 @@ function Testimonials() {
   const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/testimonials?approved=1")
+    fetch("/api/testimonials?approved=1")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
@@ -1374,7 +1374,7 @@ function Testimonials() {
         const formData = new FormData();
         formData.append("image", selectedFile);
 
-        const uploadRes = await fetch("http://localhost:5000/api/upload", {
+        const uploadRes = await fetch("/api/upload", {
           method: "POST",
           body: formData
         });
@@ -1405,7 +1405,7 @@ function Testimonials() {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/testimonials", {
+      const res = await fetch("/api/testimonials", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
