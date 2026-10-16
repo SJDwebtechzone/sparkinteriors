@@ -266,6 +266,42 @@ const projectsData: Project[] = [
       { name: "Brushed Brass Handles", colorCode: "bg-[#D4AF37]" }
     ],
     description: "A bespoke minimalist dining room crockery unit combining sage green matte cabinetry, warm natural wood internal shelving, concealed LED profile lighting, and fluted glass display cabinets designed to showcase heirloom chinaware with modern elegance."
+  },
+  {
+    id: "office-enivironment",
+    title: "Office enivironment",
+    category: "office-work",
+    categoryLabel: "Office Work",
+    image: "/uploads/1792062581250-753762403.png",
+    location: "Guindy, Chennai",
+    year: "2025",
+    area: "4,500 sq.ft",
+    scope: "Modern Office Workspace",
+    materials: ["Acoustic Panels", "Ergonomic Glass Partitions", "Warm Linear LED"],
+    materialSamples: [
+      { name: "Acoustic Flute", colorCode: "bg-[#ECEFF1]" },
+      { name: "Matte Charcoal", colorCode: "bg-[#37474F]" },
+      { name: "Warm Teak", colorCode: "bg-[#8B5A2B]" }
+    ],
+    description: "We design and develop modern office spaces that combine functionality, comfort, and professional aesthetics."
+  },
+  {
+    id: "commercial-space",
+    title: "Commercial Space",
+    category: "commercial-space",
+    categoryLabel: "Commercial Space",
+    image: "/uploads/1792062692743-163638705.png",
+    location: "Anna Nagar, Chennai",
+    year: "2025",
+    area: "3,200 sq.ft",
+    scope: "Commercial & Retail Interior",
+    materials: ["Structural Glass", "Textured Micro-Cement", "Brass Inlays"],
+    materialSamples: [
+      { name: "Micro Cement", colorCode: "bg-[#ECEFF1]" },
+      { name: "Brushed Brass", colorCode: "bg-[#D4AF37]" },
+      { name: "Smoked Glass", colorCode: "bg-[#424242]" }
+    ],
+    description: "From retail outlets to business complexes, our focus is on quality construction, smart space planning, and modern architectural design that supports business growth."
   }
 ];
 
@@ -277,6 +313,8 @@ function normalizeCategory(cat: string | null): string {
   if (c.includes("kitchen")) return "kitchens";
   if (c.includes("wardrobe")) return "wardrobes";
   if (c.includes("civil")) return "civil-work";
+  if (c.includes("office")) return "office-work";
+  if (c.includes("commercial")) return "commercial-space";
   if (c.includes("crockery") || c.includes("crochery")) return "crochery-unit";
   if (c.includes("pooja") || c.includes("mandir")) return "pooja-units";
   if (c.includes("living")) return "living-rooms";
@@ -294,6 +332,8 @@ function PortfolioContent() {
     { value: "all", label: "All Collections" },
     { value: "kitchens", label: "Modular Kitchens" },
     { value: "civil-work", label: "Civil Work" },
+    { value: "office-work", label: "Office Work" },
+    { value: "commercial-space", label: "Commercial Space" },
     { value: "crochery-unit", label: "Crockery Unit" },
     { value: "pooja-units", label: "Pooja Units" },
     { value: "living-rooms", label: "Living Rooms" },
@@ -349,6 +389,8 @@ function PortfolioContent() {
           { value: "all", label: "All Collections" },
           { value: "kitchens", label: "Modular Kitchens" },
           { value: "civil-work", label: "Civil Work" },
+          { value: "office-work", label: "Office Work" },
+          { value: "commercial-space", label: "Commercial Space" },
           { value: "crochery-unit", label: "Crockery Unit" },
           { value: "pooja-units", label: "Pooja Units" },
           { value: "living-rooms", label: "Living Rooms" },

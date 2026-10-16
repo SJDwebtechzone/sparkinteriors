@@ -97,6 +97,26 @@ export function getServiceTheme(name: string): ServiceTheme {
     };
   }
 
+  // 8. Office Work - Ocean Sky & Tech Blue
+  if (n.includes("office")) {
+    return {
+      activeBadge: "bg-gradient-to-br from-[#0284C7] to-[#0369A1] text-white shadow-md shadow-[#0284C7]/30 border-transparent scale-105",
+      inactiveBadge: "bg-[#0284C7]/12 text-[#0284C7] border-[#0284C7]/35 group-hover:bg-[#0284C7]/22 group-hover:border-[#0284C7]/60 group-hover:scale-105",
+      activeText: "text-[#0284C7]",
+      hoverText: "group-hover:text-[#0284C7]"
+    };
+  }
+
+  // 9. Commercial Space - Modern Deep Teal
+  if (n.includes("commercial")) {
+    return {
+      activeBadge: "bg-gradient-to-br from-[#0D9488] to-[#115E59] text-white shadow-md shadow-[#0D9488]/30 border-transparent scale-105",
+      inactiveBadge: "bg-[#0D9488]/12 text-[#0F766E] border-[#0D9488]/35 group-hover:bg-[#0D9488]/22 group-hover:border-[#0D9488]/60 group-hover:scale-105",
+      activeText: "text-[#0F766E]",
+      hoverText: "group-hover:text-[#0F766E]"
+    };
+  }
+
   // Fallback - Warm Luxury Gold
   return {
     activeBadge: "bg-gradient-to-br from-[#D59318] to-[#C08A4E] text-white shadow-md shadow-[#D59318]/30 border-transparent scale-105",
@@ -194,6 +214,26 @@ function getServiceIcon(name: string) {
     );
   }
 
+  // 9. Office Work: Workstation & Monitor
+  if (n.includes("office")) {
+    return (
+      <svg className="w-5.5 h-5.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="3" width="20" height="13" rx="2" fill="currentColor" fillOpacity="0.15" />
+        <path d="M12 16v5M8 21h8M7 9h10" />
+      </svg>
+    );
+  }
+
+  // 10. Commercial Space: Commercial Architecture & Storefront
+  if (n.includes("commercial")) {
+    return (
+      <svg className="w-5.5 h-5.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" fill="currentColor" fillOpacity="0.15" />
+        <path d="M3 9h18M9 21V9M15 21V9" />
+      </svg>
+    );
+  }
+
   // Fallback
   return (
     <svg className="w-5.5 h-5.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -241,6 +281,24 @@ export default function ServicesPage() {
       description: "Carefully curated art, textiles, lighting, and decorative accessories that bring warmth, character, and cohesive style.",
       image: "/services-styling.jpg",
       deliverables: ["Art Curation & Placement", "Custom Linen & Soft Accessories", "Decorative Lighting Schemes", "Final Room Dressing & Styling"]
+    },
+    {
+      number: "05",
+      name: "Office Work",
+      category: "OFFICE WORK",
+      headline: "Productive, modern workspaces.",
+      description: "We design and develop modern office spaces that combine functionality, comfort, and professional aesthetics.",
+      image: "/uploads/1792060886090-274025143.png",
+      deliverables: ["Ergonomic Workstation Layouts", "Acoustic Conference & Meeting Rooms", "Executive Suite Architecture", "Smart Commercial Lighting & Cable Management"]
+    },
+    {
+      number: "06",
+      name: "Commercial Space",
+      category: "COMMERCIAL SPACE",
+      headline: "Spaces built for business growth.",
+      description: "From retail outlets to business complexes, our focus is on quality construction, smart space planning, and modern architectural design that supports business growth.",
+      image: "/uploads/1792062649340-103344752.png",
+      deliverables: ["Retail & Showroom Spatial Planning", "Brand Identity & Facade Integration", "Durable Commercial Grade Materials", "Turnkey Construction & Fit-out Execution"]
     }
   ];
 

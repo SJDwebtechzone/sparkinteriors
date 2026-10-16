@@ -16,6 +16,9 @@ const DEFAULT_SERVICES: FooterServiceItem[] = [
   { id: "living-rooms", name: "Living Rooms" },
   { id: "pooja-units", name: "Pooja Units" },
   { id: "false-ceilings", name: "False Ceiling" },
+  { id: "civil-work", name: "Civil Work" },
+  { id: "office-work", name: "Office Work" },
+  { id: "commercial-space", name: "Commercial Space" },
 ];
 
 export default function Footer() {

@@ -158,6 +158,27 @@ async function initSqliteDb() {
       }
     }
 
+    const servicesCheck = await allSqlite("SELECT COUNT(*) as count FROM services");
+    if (!servicesCheck[0] || servicesCheck[0].count === 0) {
+      const defaultServices = [
+        ["kitchens", "Modular Kitchens", "Tailored modular kitchens blending ergonomic storage, soft-close hardware, and heat-resistant quartz surfaces for seamless culinary experiences.", "/home-kitchen-luxury.jpg"],
+        ["living-rooms", "Living Rooms", "Welcoming and elegant living room layouts featuring custom wall paneling, acoustic integration, and bespoke architectural TV media consoles.", "/home-residential-luxury-tv.jpg"],
+        ["false-ceilings", "False Ceilings", "Architectural false ceiling layouts with concealed warm LED cove illumination, acoustic refinement, and flush magnetic spotlights.", "/about-living-curved-custom.jpg"],
+        ["pooja-units", "Pooja Units", "Sacred prayer alcoves designed with authentic Burma teak carving, backlit brass jali panels, and concealed bell alcoves.", "/home-pooja-unit.jpg"],
+        ["wardrobes", "Wardrobes", "Bespoke floor-to-ceiling walk-in and sliding wardrobe systems with fluted glass doors, smart sensor lighting, and custom organizers.", "/home-bedroom-luxury-wardrobe-green.jpg"],
+        ["crochery-unit", "Crockery Unit", "Transform your dining space with a beautifully designed minimalist crockery unit that combines modern elegance with everyday functionality.", "/uploads/1791866196623-701128140.png"],
+        ["civil-work", "Civil Work", "We build modern, durable, and elegant homes with a focus on quality craftsmanship, thoughtful design, and long-lasting structural strength.", "/uploads/1792055409170-300976094.png"],
+        ["office-work", "Office Work", "We design and develop modern office spaces that combine functionality, comfort, and professional aesthetics.", "/uploads/1792060886090-274025143.png"],
+        ["commercial-space", "Commercial Space", "From retail outlets to business complexes, our focus is on quality construction, smart space planning, and modern architectural design that supports business growth.", "/uploads/1792062649340-103344752.png"]
+      ];
+      for (const row of defaultServices) {
+        await runSqlite(
+          `INSERT OR IGNORE INTO services (id, name, description, image) VALUES (?, ?, ?, ?)`,
+          row
+        );
+      }
+    }
+
     console.log("SQLite Database initialized cleanly.");
   } catch (e) {
     console.error("SQLite initialization error:", e.message);

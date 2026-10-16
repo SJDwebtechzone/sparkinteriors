@@ -111,6 +111,24 @@ const serviceSummariesFallback: ServiceSummary[] = [
     description: "Transform your dining space with a beautifully designed minimalist crockery unit that combines modern elegance with everyday functionality.",
     image: "/uploads/1791866196623-701128140.png",
   },
+  {
+    number: "07",
+    name: "Civil Work",
+    description: "We build modern, durable, and elegant homes with a focus on quality craftsmanship, thoughtful design, and long-lasting structural strength.",
+    image: "/uploads/1792055409170-300976094.png",
+  },
+  {
+    number: "08",
+    name: "Office Work",
+    description: "We design and develop modern office spaces that combine functionality, comfort, and professional aesthetics.",
+    image: "/uploads/1792060886090-274025143.png",
+  },
+  {
+    number: "09",
+    name: "Commercial Space",
+    description: "From retail outlets to business complexes, our focus is on quality construction, smart space planning, and modern architectural design that supports business growth.",
+    image: "/uploads/1792062649340-103344752.png",
+  },
 ];
 
 interface Testimonial {
