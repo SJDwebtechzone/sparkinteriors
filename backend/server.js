@@ -774,5 +774,3 @@ app.post("/api/settings/reset-password", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Spark Interiors Backend API running on http://localhost:${PORT}`);
 });
-
-module.exports = app;
