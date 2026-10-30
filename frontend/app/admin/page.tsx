@@ -45,16 +45,60 @@ interface Testimonial {
   approved?: number;
 }
 
+export const CORE_10_CATEGORIES = [
+  { value: "false-ceilings", label: "False Ceiling" },
+  { value: "kitchens", label: "Modular Kitchen" },
+  { value: "wardrobes", label: "Wardrobes" },
+  { value: "living-rooms", label: "Living Rooms" },
+  { value: "crockery-units", label: "Crockery Units" },
+  { value: "pooja-units", label: "Pooja Units" },
+  { value: "office-interior", label: "Office Interior" },
+  { value: "shop-interior", label: "Shop Interior" },
+  { value: "commercial-interior", label: "Commercial Interior" },
+  { value: "civil-work", label: "Civil Work" },
+] as const;
+
+export function getCleanCategoryLabel(category: string | undefined): string {
+  if (!category) return "Other";
+  const c = category.toLowerCase().trim();
+  if (c.includes("ceiling") || c.includes("false")) return "False Ceiling";
+  if (c.includes("kitchen")) return "Modular Kitchen";
+  if (c.includes("wardrobe") || c.includes("bedroom")) return "Wardrobes";
+  if (c.includes("living")) return "Living Rooms";
+  if (c.includes("crockery") || c.includes("crochery")) return "Crockery Units";
+  if (c.includes("pooja") || c.includes("mandir")) return "Pooja Units";
+  if (c.includes("office")) return "Office Interior";
+  if (c.includes("shop") || c.includes("retail") || c.includes("boutique")) return "Shop Interior";
+  if (c.includes("commercial")) return "Commercial Interior";
+  if (c.includes("civil") || c.includes("construction")) return "Civil Work";
+  return categoryLabels[category] || category;
+}
+
 const categoryLabels: Record<string, string> = {
+  "false-ceilings": "False Ceiling",
+  "false-ceiling": "False Ceiling",
   kitchens: "Modular Kitchen",
+  "modular-kitchens": "Modular Kitchen",
+  "modular-kitchen": "Modular Kitchen",
   wardrobes: "Wardrobes",
+  wardrobe: "Wardrobes",
   bedrooms: "Wardrobes",
-  "living-rooms": "Living Room",
-  "pooja-units": "Pooja Unit",
+  "living-rooms": "Living Rooms",
+  "living-room": "Living Rooms",
+  "living-spaces": "Living Rooms",
+  "crockery-units": "Crockery Units",
+  "crochery-unit": "Crockery Units",
+  "crockery-unit": "Crockery Units",
+  "pooja-units": "Pooja Units",
+  "pooja-unit": "Pooja Units",
+  "office-interior": "Office Interior",
+  "office-work": "Office Interior",
+  "shop-interior": "Shop Interior",
+  "commercial-interior": "Commercial Interior",
+  "commercial-space": "Commercial Interior",
+  commercial: "Commercial Interior",
   "civil-work": "Civil Work",
-  "crochery-unit": "Crockery Unit",
-  "false-ceilings": "False Ceilings",
-  "office-work": "Office Work"
+  civil: "Civil Work",
 };
 
 export default function AdminDashboardPage() {
@@ -67,8 +111,7 @@ export default function AdminDashboardPage() {
   const [recoveryStep, setRecoveryStep] = useState<"email" | "otp" | "reset">("email");
   const [recoveryEmail, setRecoveryEmail] = useState("");
   const [otpCode, setOtpCode] = useState("");
-  const [receivedOtp, setReceivedOtp] = useState("");
-  const [isOtpLoading, setIsOtpLoading] = useState(false);
+    const [isOtpLoading, setIsOtpLoading] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -80,6 +123,7 @@ export default function AdminDashboardPage() {
   const [savedPasscode, setSavedPasscode] = useState("spark123");
   const [settingsUser, setSettingsUser] = useState("");
   const [settingsPass, setSettingsPass] = useState("");
+  const [confirmSettingsPass, setConfirmSettingsPass] = useState("");
 
   // Tab State: 'overview' | 'hero' | 'projects' | 'services' | 'testimonials' | 'settings'
   const [activeTab, setActiveTab] = useState<"overview" | "hero" | "projects" | "services" | "testimonials" | "settings">("overview");
@@ -103,7 +147,7 @@ export default function AdminDashboardPage() {
 
   // Form Fields - Projects
   const [projTitle, setProjTitle] = useState("");
-  const [projCategory, setProjCategory] = useState("kitchens");
+  const [projCategory, setProjCategory] = useState("");
   const [projLocation, setProjLocation] = useState("");
   const [projYear, setProjYear] = useState("");
   const [projArea, setProjArea] = useState("");
@@ -131,42 +175,108 @@ export default function AdminDashboardPage() {
   const [statusMsg, setStatusMsg] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
 
+  // Category Edit / Rename States
+  const [editingCategoryValue, setEditingCategoryValue] = useState<string | null>(null);
+  const [editingCategoryName, setEditingCategoryName] = useState<string>("");
+  const [isRenamingCategory, setIsRenamingCategory] = useState<boolean>(false);
+
   // Refs for upload buttons
   const projFileRef = useRef<HTMLInputElement>(null);
   const serviceFileRef = useRef<HTMLInputElement>(null);
   const testFileRef = useRef<HTMLInputElement>(null);
   const heroFileRef = useRef<HTMLInputElement>(null);
 
-  // Dynamic Room Categories synced directly from backend services
+  // Dynamic Room Categories: synchronizes with live services, canonical categories, and custom project categories
   const dynamicRoomCategories = React.useMemo(() => {
-    const baseOptions = [
-      { value: "kitchens", label: "Kitchens" },
-      { value: "wardrobes", label: "Wardrobes" },
-      { value: "living-rooms", label: "Living Rooms" },
-      { value: "pooja-units", label: "Pooja Units" },
-      { value: "civil-work", label: "Civil Work" },
-      { value: "crochery-unit", label: "Crockery Unit" },
-      { value: "false-ceilings", label: "False Ceilings" },
-    ];
+    const list: { value: string; label: string }[] = [];
+    const seenValues = new Set<string>();
+    const seenLabels = new Set<string>();
 
-    const map = new Map<string, { value: string; label: string }>();
-    baseOptions.forEach((b) => map.set(b.value.toLowerCase(), b));
-
-    services.forEach((s) => {
-      if (!s.name) return;
-      const val = s.id || s.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-      let label = s.name;
-      if (s.name.toLowerCase() === "modular kitchens") label = "Kitchens";
-      else if (s.name.toLowerCase().includes("crockery") || s.name.toLowerCase().includes("crochery")) label = "Crockery Unit";
-
-      map.set(val.toLowerCase(), {
-        value: val,
-        label: label
-      });
+    // 1. Canonical 10 core categories first
+    CORE_10_CATEGORIES.forEach((cat) => {
+      const matchedService = services.find(
+        (s) => s.id.toLowerCase() === cat.value.toLowerCase() || 
+               s.name.toLowerCase() === cat.label.toLowerCase() ||
+               (cat.value === "kitchens" && s.id.includes("kitchen")) ||
+               (cat.value === "false-ceilings" && s.id.includes("ceiling"))
+      );
+      const displayLabel = matchedService ? matchedService.name : cat.label;
+      const normVal = cat.value.toLowerCase().trim();
+      const normLabel = displayLabel.toLowerCase().trim();
+      list.push({ value: cat.value, label: displayLabel });
+      seenValues.add(normVal);
+      seenLabels.add(normLabel);
     });
 
-    return Array.from(map.values());
-  }, [services]);
+    // 2. Extra services added in services tab
+    services.forEach((s) => {
+      const val = s.id || s.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-");
+      const normVal = val.toLowerCase().trim();
+      const normLabel = s.name.toLowerCase().trim();
+      if (!seenValues.has(normVal) && !seenLabels.has(normLabel)) {
+        list.push({ value: val, label: s.name });
+        seenValues.add(normVal);
+        seenLabels.add(normLabel);
+      }
+    });
+
+    // 3. Extra custom typed categories present in projects
+    projects.forEach((p) => {
+      if (p.category && p.category !== "all") {
+        const normVal = p.category.toLowerCase().trim();
+        const rawLabel = p.categoryLabel || p.category;
+        const normLabel = rawLabel.toLowerCase().trim();
+        if (!seenValues.has(normVal) && !seenLabels.has(normLabel)) {
+          list.push({
+            value: normVal,
+            label: p.categoryLabel || p.category.replace(/-/g, " ").replace(/\b\w/g, (ch) => ch.toUpperCase())
+          });
+          seenValues.add(normVal);
+          seenLabels.add(normLabel);
+        }
+      }
+    });
+
+    return list;
+  }, [services, projects]);
+
+  const filterProjectMatches = (p: Project) => {
+    let matchesCategory = false;
+    if (adminProjCategoryFilter === "all") {
+      matchesCategory = true;
+    } else {
+      const pCat = (p.category || "").toLowerCase().trim();
+      const fCat = adminProjCategoryFilter.toLowerCase().trim();
+      if (fCat === "false-ceilings") {
+        matchesCategory = pCat.includes("ceiling") || pCat.includes("false");
+      } else if (fCat === "kitchens") {
+        matchesCategory = pCat.includes("kitchen");
+      } else if (fCat === "wardrobes") {
+        matchesCategory = pCat.includes("wardrobe") || pCat.includes("bedroom");
+      } else if (fCat === "living-rooms") {
+        matchesCategory = pCat.includes("living");
+      } else if (fCat === "crockery-units") {
+        matchesCategory = pCat.includes("crockery") || pCat.includes("crochery");
+      } else if (fCat === "pooja-units") {
+        matchesCategory = pCat.includes("pooja") || pCat.includes("mandir");
+      } else if (fCat === "office-interior") {
+        matchesCategory = pCat.includes("office");
+      } else if (fCat === "shop-interior") {
+        matchesCategory = pCat.includes("shop") || pCat.includes("retail") || pCat.includes("boutique");
+      } else if (fCat === "commercial-interior") {
+        matchesCategory = pCat.includes("commercial");
+      } else if (fCat === "civil-work") {
+        matchesCategory = pCat.includes("civil") || pCat.includes("construction");
+      } else {
+        matchesCategory = pCat === fCat;
+      }
+    }
+
+    const matchesSearch =
+      !adminProjSearch.trim() ||
+      p.title.toLowerCase().includes(adminProjSearch.toLowerCase());
+    return matchesCategory && matchesSearch;
+  };
 
   // 1. Sync & Load data from API
   useEffect(() => {
@@ -197,11 +307,9 @@ export default function AdminDashboardPage() {
         const settingsData = await settingsRes.json();
         if (settingsData.username) {
           setSavedUsername(settingsData.username);
-          setSettingsUser(settingsData.username);
         }
         if (settingsData.passcode) {
           setSavedPasscode(settingsData.passcode);
-          setSettingsPass(settingsData.passcode);
         }
       }
 
@@ -242,8 +350,25 @@ export default function AdminDashboardPage() {
   };
 
   // 2. Handle Login credentials
-  const handleAuthSubmit = (e: React.FormEvent) => {
+  const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      const res = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: username.trim(), password: passcode })
+      });
+      if (res.ok) {
+        setIsAuthenticated(true);
+        sessionStorage.setItem("spark_admin_authed", "true");
+        setAuthError("");
+        setStatusMsg("");
+        return;
+      }
+    } catch {
+      // Offline fallback
+    }
+
     if (username.trim() === savedUsername && passcode === savedPasscode) {
       setIsAuthenticated(true);
       sessionStorage.setItem("spark_admin_authed", "true");
@@ -270,10 +395,7 @@ export default function AdminDashboardPage() {
       const data = await res.json();
       if (res.ok) {
         setRecoveryStep("otp");
-        if (data.otp) {
-          setReceivedOtp(data.otp);
-        }
-        setRecoverySuccess(`OTP verification code sent to ${recoveryEmail}.`);
+        setRecoverySuccess(`OTP verification code sent to ${recoveryEmail}. Please check your email inbox.`);
       } else {
         setRecoveryError(data.error || "Email verification failed.");
       }
@@ -343,8 +465,7 @@ export default function AdminDashboardPage() {
           setIsEmailVerified(false);
           setRecoveryEmail("");
           setOtpCode("");
-          setReceivedOtp("");
-          setNewPassword("");
+                    setNewPassword("");
           setConfirmNewPassword("");
           setRecoverySuccess("");
         }, 2000);
@@ -504,10 +625,88 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // Rename / Edit Category directly from Project Dashboard
+  const handleSaveCategoryRename = async () => {
+    if (!editingCategoryValue || !editingCategoryName.trim()) return;
+    const newName = editingCategoryName.trim();
+    const targetValue = editingCategoryValue;
+    const currentCategoryObj = dynamicRoomCategories.find((c) => c.value === targetValue);
+    const oldName = currentCategoryObj ? currentCategoryObj.label : targetValue;
+
+    if (newName === oldName) {
+      setEditingCategoryValue(null);
+      return;
+    }
+
+    setIsRenamingCategory(true);
+    try {
+      // 1. If matching service exists in database, update its name
+      const matchedService = services.find(
+        (s) => s.id.toLowerCase() === targetValue.toLowerCase() || 
+               s.name.toLowerCase() === oldName.toLowerCase() ||
+               (targetValue === "false-ceilings" && s.id.includes("ceiling")) ||
+               (targetValue === "kitchens" && s.id.includes("kitchen"))
+      );
+
+      if (matchedService) {
+        await fetch(`http://localhost:5000/api/services/${matchedService.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: matchedService.id,
+            name: newName,
+            description: matchedService.description || "",
+            image: matchedService.image || ""
+          })
+        });
+      }
+
+      // 2. Update all projects matching this category
+      const matchingProjects = projects.filter((p) => {
+        const pCat = (p.category || "").toLowerCase().trim();
+        const pLabel = (p.categoryLabel || "").toLowerCase().trim();
+        const tVal = targetValue.toLowerCase().trim();
+        const oName = oldName.toLowerCase().trim();
+        return pCat === tVal || pCat === oName || pLabel === oName || pCat.includes(tVal) || 
+               (tVal === "false-ceilings" && (pCat.includes("ceiling") || pCat.includes("false"))) ||
+               (tVal === "kitchens" && pCat.includes("kitchen"));
+      });
+
+      for (const p of matchingProjects) {
+        await fetch(`http://localhost:5000/api/projects/${p.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...p,
+            categoryLabel: newName
+          })
+        });
+      }
+
+      // 3. Dispatch real-time events to update across all windows & portfolio page
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("spark_services_updated"));
+        window.dispatchEvent(new CustomEvent("spark_projects_updated"));
+        localStorage.setItem("spark_services_updated", Date.now().toString());
+        localStorage.setItem("spark_projects_updated", Date.now().toString());
+      }
+
+      setStatusMsg(`Category renamed to "${newName}" successfully!`);
+      setIsSuccess(true);
+      await fetchData();
+      setEditingCategoryValue(null);
+    } catch (err) {
+      setStatusMsg("Failed to rename category.");
+      setIsSuccess(false);
+    } finally {
+      setIsRenamingCategory(false);
+    }
+  };
+
   // Save Project
   const handleSaveProject = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!projTitle || !projCategory || !projImage) {
+    if (!projTitle || !projCategory.trim() || !projImage) {
       setStatusMsg("Please provide a title, category, and image.");
       setIsSuccess(false);
       return;
@@ -517,19 +716,21 @@ export default function AdminDashboardPage() {
     const slug = projTitle.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     const finalId = editingId || (projects.some((p) => p.id === slug) ? `${slug}-${Date.now()}` : slug);
 
+    const trimmedCategory = projCategory.trim();
     const matchedService = services.find(
-      (s) => s.id.toLowerCase() === projCategory.toLowerCase() || s.name.toLowerCase() === projCategory.toLowerCase()
+      (s) => s.id.toLowerCase() === trimmedCategory.toLowerCase() || s.name.toLowerCase() === trimmedCategory.toLowerCase()
     );
+    const resolvedCategoryValue = matchedService
+      ? matchedService.id
+      : trimmedCategory.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     const resolvedCategoryLabel = matchedService
       ? matchedService.name
-      : categoryLabels[projCategory] ||
-        dynamicRoomCategories.find((c) => c.value === projCategory)?.label ||
-        "Other";
+      : (getCleanCategoryLabel(trimmedCategory) !== "Other" ? getCleanCategoryLabel(trimmedCategory) : trimmedCategory);
 
     const projectPayload = {
       id: finalId,
       title: projTitle,
-      category: projCategory,
+      category: resolvedCategoryValue,
       categoryLabel: resolvedCategoryLabel,
       image: projImage,
       location: projLocation || "",
@@ -559,6 +760,12 @@ export default function AdminDashboardPage() {
         clearForms();
         fetchData();
         setActiveTab("projects");
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("spark_projects_updated"));
+          window.dispatchEvent(new CustomEvent("spark_services_updated"));
+          localStorage.setItem("spark_projects_updated", Date.now().toString());
+          localStorage.setItem("spark_services_updated", Date.now().toString());
+        }
       } else {
         setStatusMsg("Failed to save project.");
         setIsSuccess(false);
@@ -680,17 +887,34 @@ export default function AdminDashboardPage() {
         setTestimonials((prev) =>
           prev.map((t) => (t.id === id ? { ...t, approved: data.approved } : t))
         );
+        setStatusMsg(data.approved === 1 ? "Review status updated: now DISPLAYING on website!" : "Review status updated: now HIDDEN from website.");
+        setIsSuccess(true);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("spark_testimonials_updated"));
+          localStorage.setItem("spark_testimonials_updated", Date.now().toString());
+        }
+      } else {
+        setStatusMsg("Failed to update review status.");
+        setIsSuccess(false);
       }
     } catch (err) {
       console.error("Toggle approval error:", err);
+      setStatusMsg("Failed to connect to server.");
+      setIsSuccess(false);
     }
   };
 
-  // Save Settings
+  // Save Settings (Username and Password)
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!settingsUser.trim() || !settingsPass.trim()) {
       setStatusMsg("Username and password cannot be empty.");
+      setIsSuccess(false);
+      return;
+    }
+
+    if (confirmSettingsPass && settingsPass !== confirmSettingsPass) {
+      setStatusMsg("Passwords do not match. Please re-enter.");
       setIsSuccess(false);
       return;
     }
@@ -708,10 +932,13 @@ export default function AdminDashboardPage() {
       if (res.ok) {
         setSavedUsername(settingsUser.trim());
         setSavedPasscode(settingsPass.trim());
-        setStatusMsg("Credentials updated successfully!");
+        setSettingsUser("");
+        setSettingsPass("");
+        setConfirmSettingsPass("");
+        setStatusMsg("Credentials updated successfully! Use your new username and password for future logins.");
         setIsSuccess(true);
       } else {
-        setStatusMsg("Failed to update credentials.");
+        setStatusMsg("Failed to update credentials. Please check backend server.");
         setIsSuccess(false);
       }
     } catch (err) {
@@ -727,7 +954,7 @@ export default function AdminDashboardPage() {
   const handleStartEditProject = (project: Project) => {
     setEditingId(project.id);
     setProjTitle(project.title);
-    setProjCategory(project.category);
+    setProjCategory(project.categoryLabel || getCleanCategoryLabel(project.category) || project.category || "");
     setProjLocation(project.location);
     setProjYear(project.year);
     setProjArea(project.area);
@@ -786,9 +1013,13 @@ export default function AdminDashboardPage() {
           setIsSuccess(true);
           clearForms();
           fetchData();
-          if (type === "services" && typeof window !== "undefined") {
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("spark_projects_updated"));
             window.dispatchEvent(new CustomEvent("spark_services_updated"));
+            localStorage.setItem("spark_projects_updated", Date.now().toString());
             localStorage.setItem("spark_services_updated", Date.now().toString());
+            window.dispatchEvent(new CustomEvent("spark_testimonials_updated"));
+            localStorage.setItem("spark_testimonials_updated", Date.now().toString());
           }
         } else {
           setStatusMsg("Failed to delete record.");
@@ -828,7 +1059,7 @@ export default function AdminDashboardPage() {
     
     // Clear project
     setProjTitle("");
-    setProjCategory("kitchens");
+    setProjCategory("");
     setProjLocation("");
     setProjYear("");
     setProjArea("");
@@ -850,6 +1081,11 @@ export default function AdminDashboardPage() {
     setTestQuote("");
     setTestImage("");
     if (testFileRef.current) testFileRef.current.value = "";
+
+    // Clear settings inputs
+    setSettingsUser("");
+    setSettingsPass("");
+    setConfirmSettingsPass("");
   };
 
   const handleLogout = () => {
@@ -867,7 +1103,7 @@ export default function AdminDashboardPage() {
   ========================================================= */
   if (!isAuthenticated) {
     return (
-      <main className="min-h-screen bg-[#FAF6F0] flex flex-col lg:flex-row selection:bg-[#D59318]/20 selection:text-[#D59318] overflow-x-hidden font-sans">
+      <main className="admin-dashboard-root min-h-screen bg-[#FAF6F0] flex flex-col lg:flex-row selection:bg-[#F3C33D]/20 selection:text-[#F3C33D] overflow-x-hidden font-sans">
         
         {/* LEFT COLUMN: Editorial Cover Page (Visible on Desktop) */}
         <div className="hidden lg:flex lg:w-7/12 bg-neutral-900 relative justify-center items-center p-16 select-none overflow-hidden">
@@ -885,7 +1121,7 @@ export default function AdminDashboardPage() {
           
           {/* Typographic Manifesto */}
           <div className="relative z-10 space-y-6 max-w-lg">
-            <span className="text-[11px] uppercase tracking-[0.35em] text-[#D59318] font-bold block">
+            <span className="text-[11px] uppercase tracking-[0.35em] text-[#F3C33D] font-bold block">
               ✦ SPARK ARCHITECTS & INTERIORS ✦
             </span>
             <blockquote className="font-serif text-[42px] leading-tight text-white font-light italic">
@@ -912,7 +1148,7 @@ export default function AdminDashboardPage() {
                   className="object-contain object-left"
                 />
               </div>
-              <span className="text-[9.5px] uppercase tracking-[0.3em] text-[#C27A32] font-bold block">
+              <span className="text-[9.5px] uppercase tracking-[0.3em] text-[#F3C33D] font-bold block">
                 SPARK PORTAL CMS
               </span>
               <h1 className="font-serif text-3xl sm:text-[36px] text-[#252A24] font-normal leading-tight">
@@ -935,7 +1171,7 @@ export default function AdminDashboardPage() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Enter username"
-                    className="w-full px-4 py-3 bg-white border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#D59318] transition-all text-neutral-800"
+                    className="w-full px-4 py-3 bg-white border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] transition-all text-neutral-800"
                   />
                 </div>
 
@@ -947,7 +1183,7 @@ export default function AdminDashboardPage() {
                     <button
                       type="button"
                       onClick={() => setShowForgot(true)}
-                      className="text-[10px] text-[#C27A32]/80 hover:text-[#C27A32] transition-colors font-semibold cursor-pointer"
+                      className="text-[10px] text-[#F3C33D]/80 hover:text-[#F3C33D] transition-colors font-semibold cursor-pointer"
                     >
                       Forgot password?
                     </button>
@@ -959,7 +1195,7 @@ export default function AdminDashboardPage() {
                       value={passcode}
                       onChange={(e) => setPasscode(e.target.value)}
                       placeholder="Enter password"
-                      className="w-full pl-4 pr-12 py-3 bg-white border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#D59318] transition-all text-neutral-800"
+                      className="w-full pl-4 pr-12 py-3 bg-white border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] transition-all text-neutral-800"
                     />
                     <button
                       type="button"
@@ -986,7 +1222,7 @@ export default function AdminDashboardPage() {
 
                 <button
                   type="submit"
-                  className="w-full bg-[#D59318] hover:bg-[#B87D0C] active:scale-98 text-white text-xs font-bold tracking-[0.2em] py-4 rounded-full transition-all duration-300 uppercase cursor-pointer shadow-md shadow-amber-500/10 mt-2"
+                  className="w-full bg-[#F3C33D] hover:bg-[#E5B22D] active:scale-98 text-white text-xs font-bold tracking-[0.2em] py-4 rounded-full transition-all duration-300 uppercase cursor-pointer shadow-md shadow-amber-500/10 mt-2"
                 >
                   Authenticate Portal
                 </button>
@@ -997,7 +1233,7 @@ export default function AdminDashboardPage() {
                   // Step 1: Administrator Email
                   <form onSubmit={handleSendOtp} className="space-y-4">
                     <div>
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-[#C27A32] font-bold block mb-1">
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold block mb-1">
                         RESET PASSWORD • STEP 1 OF 3
                       </span>
                       <h2 className="font-serif text-2xl text-[#252A24] font-normal">
@@ -1018,7 +1254,7 @@ export default function AdminDashboardPage() {
                         value={recoveryEmail}
                         onChange={(e) => setRecoveryEmail(e.target.value)}
                         placeholder="Enter your registered email"
-                        className="w-full px-4 py-3 bg-white border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#D59318] transition-all text-neutral-800"
+                        className="w-full px-4 py-3 bg-white border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] transition-all text-neutral-800"
                       />
                     </div>
 
@@ -1029,7 +1265,7 @@ export default function AdminDashboardPage() {
                     <button
                       type="submit"
                       disabled={isOtpLoading}
-                      className="w-full bg-[#D59318] hover:bg-[#B87D0C] active:scale-98 text-white text-xs font-bold tracking-[0.15em] py-3.5 rounded-full transition-all duration-300 uppercase cursor-pointer shadow-md disabled:opacity-50"
+                      className="w-full bg-[#F3C33D] hover:bg-[#E5B22D] active:scale-98 text-white text-xs font-bold tracking-[0.15em] py-3.5 rounded-full transition-all duration-300 uppercase cursor-pointer shadow-md disabled:opacity-50"
                     >
                       {isOtpLoading ? "Sending OTP..." : "Send Verification OTP"}
                     </button>
@@ -1040,7 +1276,7 @@ export default function AdminDashboardPage() {
                   // Step 2: Enter & Verify 6-Digit OTP Code
                   <form onSubmit={handleVerifyOtp} className="space-y-4">
                     <div>
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-[#C27A32] font-bold block mb-1">
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold block mb-1">
                         SECURITY VERIFICATION • STEP 2 OF 3
                       </span>
                       <h2 className="font-serif text-2xl text-[#252A24] font-normal">
@@ -1051,17 +1287,12 @@ export default function AdminDashboardPage() {
                       </p>
                     </div>
 
-                    {/* Display OTP code notice for instant verification */}
-                    {receivedOtp && (
-                      <div className="p-3 bg-amber-50/80 border border-amber-200/80 rounded-xl text-center">
-                        <span className="text-[10px] uppercase tracking-wider text-amber-700 font-bold block mb-0.5">
-                          Verification OTP Code
-                        </span>
-                        <span className="font-mono text-2xl font-bold tracking-[0.3em] text-[#D59318]">
-                          {receivedOtp}
-                        </span>
-                      </div>
-                    )}
+                    {/* Discreet Email Check Instruction (No OTP displayed on screen) */}
+                    <div className="p-3.5 bg-[#FAF6F0] border border-[#E1D3C1]/50 rounded-xl text-center">
+                      <p className="text-xs text-neutral-600 font-medium leading-relaxed">
+                        ✉ A 6-digit security OTP code has been sent directly to your registered email. Check your inbox (or Spam) and enter it below.
+                      </p>
+                    </div>
 
                     <div className="space-y-1.5">
                       <label className="block text-[10px] uppercase text-neutral-450 tracking-wider font-semibold">
@@ -1074,7 +1305,7 @@ export default function AdminDashboardPage() {
                         value={otpCode}
                         onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
                         placeholder="Enter 6-digit code"
-                        className="w-full px-4 py-3 bg-white border border-[#E1D3C1]/30 rounded-xl text-center text-lg font-mono font-bold tracking-[0.3em] focus:outline-none focus:border-[#D59318] transition-all text-neutral-800"
+                        className="w-full px-4 py-3 bg-white border border-[#E1D3C1]/30 rounded-xl text-center text-lg font-mono font-bold tracking-[0.3em] focus:outline-none focus:border-[#F3C33D] transition-all text-neutral-800"
                       />
                     </div>
 
@@ -1088,30 +1319,18 @@ export default function AdminDashboardPage() {
                     <button
                       type="submit"
                       disabled={isOtpLoading}
-                      className="w-full bg-[#D59318] hover:bg-[#B87D0C] active:scale-98 text-white text-xs font-bold tracking-[0.15em] py-3.5 rounded-full transition-all duration-300 uppercase cursor-pointer shadow-md disabled:opacity-50"
+                      className="w-full bg-[#F3C33D] hover:bg-[#E5B22D] active:scale-98 text-white text-xs font-bold tracking-[0.15em] py-3.5 rounded-full transition-all duration-300 uppercase cursor-pointer shadow-md disabled:opacity-50"
                     >
                       {isOtpLoading ? "Verifying..." : "Verify OTP Code"}
                     </button>
 
-                    <div className="flex justify-between items-center text-xs pt-1">
+                    <div className="text-center text-xs pt-1">
                       <button
                         type="button"
                         onClick={handleSendOtp}
-                        className="text-[#C27A32] hover:underline font-medium"
+                        className="text-[#F3C33D] hover:underline font-medium cursor-pointer"
                       >
                         Resend OTP
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setRecoveryStep("email");
-                          setOtpCode("");
-                          setRecoveryError("");
-                          setRecoverySuccess("");
-                        }}
-                        className="text-neutral-400 hover:text-neutral-600"
-                      >
-                        Change Email
                       </button>
                     </div>
                   </form>
@@ -1121,7 +1340,7 @@ export default function AdminDashboardPage() {
                   // Step 3: Create New Password
                   <form onSubmit={handleResetPassword} className="space-y-4">
                     <div>
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-[#C27A32] font-bold block mb-1">
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold block mb-1">
                         RESET PASSWORD • STEP 3 OF 3
                       </span>
                       <h2 className="font-serif text-2xl text-[#252A24] font-normal">
@@ -1143,7 +1362,7 @@ export default function AdminDashboardPage() {
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
                           placeholder="Enter new password"
-                          className="w-full px-4 py-3 bg-white border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#D59318] transition-all text-neutral-800"
+                          className="w-full px-4 py-3 bg-white border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] transition-all text-neutral-800"
                         />
                       </div>
 
@@ -1157,7 +1376,7 @@ export default function AdminDashboardPage() {
                           value={confirmNewPassword}
                           onChange={(e) => setConfirmNewPassword(e.target.value)}
                           placeholder="Confirm new password"
-                          className="w-full px-4 py-3 bg-white border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#D59318] transition-all text-neutral-800"
+                          className="w-full px-4 py-3 bg-white border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] transition-all text-neutral-800"
                         />
                       </div>
                     </div>
@@ -1171,7 +1390,7 @@ export default function AdminDashboardPage() {
 
                     <button
                       type="submit"
-                      className="w-full bg-[#D59318] hover:bg-[#B87D0C] active:scale-98 text-white text-xs font-bold tracking-[0.15em] py-3.5 rounded-full transition-all duration-300 uppercase cursor-pointer shadow-md"
+                      className="w-full bg-[#F3C33D] hover:bg-[#E5B22D] active:scale-98 text-white text-xs font-bold tracking-[0.15em] py-3.5 rounded-full transition-all duration-300 uppercase cursor-pointer shadow-md"
                     >
                       Reset Password
                     </button>
@@ -1190,11 +1409,10 @@ export default function AdminDashboardPage() {
                       setRecoverySuccess("");
                       setRecoveryEmail("");
                       setOtpCode("");
-                      setReceivedOtp("");
-                      setNewPassword("");
+                                            setNewPassword("");
                       setConfirmNewPassword("");
                     }}
-                    className="text-xs text-neutral-500 hover:text-[#C27A32] transition-colors inline-flex items-center gap-2 cursor-pointer font-semibold bg-transparent border-none p-0 mx-auto"
+                    className="text-xs text-neutral-500 hover:text-[#F3C33D] transition-colors inline-flex items-center gap-2 cursor-pointer font-semibold bg-transparent border-none p-0 mx-auto"
                   >
                     ← Back to Login
                   </button>
@@ -1205,7 +1423,7 @@ export default function AdminDashboardPage() {
             <div className="pt-6 border-t border-[#E1D3C1]/20">
               <Link
                 href="/portfolio"
-                className="text-xs text-neutral-500 hover:text-[#C27A32] transition-colors inline-flex items-center gap-2"
+                className="text-xs text-neutral-500 hover:text-[#F3C33D] transition-colors inline-flex items-center gap-2"
               >
                 ← Return to Spark website
               </Link>
@@ -1221,7 +1439,7 @@ export default function AdminDashboardPage() {
       RENDER ADMIN DASHBOARD PANEL (AUTHENTICATED)
   ========================================================= */
   return (
-    <main className="min-h-screen bg-[#FAF6F0] text-[#252A24] font-sans selection:bg-[#D59318]/20 selection:text-[#D59318] flex flex-col justify-between overflow-x-hidden relative">
+    <main className="admin-dashboard-root min-h-screen bg-[#FAF6F0] text-[#252A24] font-sans selection:bg-[#F3C33D]/20 selection:text-[#F3C33D] flex flex-col justify-between overflow-x-hidden relative">
 
       <div className="flex-grow py-12 max-w-[1240px] mx-auto w-full px-6 sm:px-12 lg:px-16 space-y-8 animate-fade-in">
         
@@ -1240,10 +1458,10 @@ export default function AdminDashboardPage() {
             </div>
             <div>
               <div className="flex items-center gap-3">
-                <span className="text-[10px] uppercase tracking-[0.3em] text-[#C27A32] font-bold">
+                <span className="text-[10px] uppercase tracking-[0.3em] text-[#F3C33D] font-bold">
                   ADMIN WORKSPACE
                 </span>
-                <span className="bg-[#D59318]/10 text-[#D59318] text-[9px] uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full">
+                <span className="bg-[#F3C33D]/10 text-[#F3C33D] text-[9px] uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full">
                   Connected to SQLite
                 </span>
               </div>
@@ -1253,7 +1471,20 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           
-          <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="flex items-center flex-wrap gap-2.5 w-full sm:w-auto">
+            <button
+              onClick={() => {
+                setActiveTab("settings");
+                clearForms();
+                setStatusMsg("");
+              }}
+              className="bg-[#FAF6F0] border border-[#E1D3C1]/50 hover:border-[#F3C33D] hover:bg-white text-neutral-700 px-4 py-2.5 rounded-full text-[11px] font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer shadow-sm flex items-center gap-1.5"
+            >
+              <svg className="w-3.5 h-3.5 text-[#F3C33D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span>Change Password</span>
+            </button>
             <button
               onClick={handleResetDatabase}
               className="bg-[#FAF6F0] border border-[#E1D3C1]/40 hover:bg-neutral-50 active:scale-95 text-neutral-600 px-5 py-3 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 cursor-pointer shadow-sm w-1/2 sm:w-auto text-center"
@@ -1280,12 +1511,12 @@ export default function AdminDashboardPage() {
                 setStatusMsg("");
               }}
               className={`pb-3 text-xs font-bold uppercase tracking-widest cursor-pointer transition-all duration-300 relative shrink-0 ${
-                activeTab === tab ? "text-[#D59318]" : "text-neutral-450 hover:text-[#252A24]"
+                activeTab === tab ? "text-[#F3C33D]" : "text-neutral-450 hover:text-[#252A24]"
               }`}
             >
-              {tab === "hero" ? "Hero Banner" : tab}
+              {tab === "hero" ? "Hero Banner" : tab === "settings" ? "Settings / Password" : tab}
               {activeTab === tab && (
-                <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#D59318] rounded-full" />
+                <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#F3C33D] rounded-full" />
               )}
             </button>
           ))}
@@ -1315,7 +1546,7 @@ export default function AdminDashboardPage() {
               {/* Welcome Curator Banner */}
               <div className="bg-white border border-[#E1D3C1]/40 rounded-[32px] p-6 sm:p-8 shadow-[0_10px_35px_rgba(70,55,40,0.02)] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div className="space-y-2">
-                  <span className="text-[10px] uppercase tracking-[0.2em] text-[#C27A32] font-semibold">Active Session</span>
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-[#F3C33D] font-semibold">Active Session</span>
                   <h2 className="font-serif text-2xl sm:text-[28px] text-[#252A24] font-normal">Welcome back, Admin.</h2>
                   <p className="text-neutral-600 text-xs sm:text-sm font-light max-w-xl leading-relaxed">
                     You have full read and write access to the SQLite content layer. All updates will propagate instantly to client interfaces, homepages, sliders, and portfolios.
@@ -1324,7 +1555,7 @@ export default function AdminDashboardPage() {
                 <div className="flex gap-3 shrink-0">
                   <button
                     onClick={() => setActiveTab("projects")}
-                    className="bg-[#D59318] hover:bg-[#B87D0C] text-white text-[10px] font-bold tracking-widest uppercase px-5 py-3 rounded-full transition-all cursor-pointer"
+                    className="bg-[#F3C33D] hover:bg-[#E5B22D] text-white text-[10px] font-bold tracking-widest uppercase px-5 py-3 rounded-full transition-all cursor-pointer"
                   >
                     Add Portfolio
                   </button>
@@ -1341,9 +1572,9 @@ export default function AdminDashboardPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div 
                   onClick={() => setActiveTab("hero")}
-                  className="bg-white border border-[#E1D3C1]/30 hover:border-[#D59318]/50 p-6 rounded-2xl shadow-sm space-y-3 cursor-pointer group transition-all duration-300"
+                  className="bg-white border border-[#E1D3C1]/30 hover:border-[#F3C33D]/50 p-6 rounded-2xl shadow-sm space-y-3 cursor-pointer group transition-all duration-300"
                 >
-                  <span className="text-[10px] uppercase text-neutral-400 font-bold tracking-widest group-hover:text-[#D59318]">Hero Media</span>
+                  <span className="text-[10px] uppercase text-neutral-400 font-bold tracking-widest group-hover:text-[#F3C33D]">Hero Media</span>
                   <div className="flex justify-between items-baseline">
                     <span className="text-2xl font-serif text-neutral-800 capitalize">{heroType === "video" ? "🎥 Video" : "🖼️ Image"}</span>
                     <span className="text-xs text-neutral-400 group-hover:translate-x-1.5 transition-transform">Edit →</span>
@@ -1352,9 +1583,9 @@ export default function AdminDashboardPage() {
 
                 <div 
                   onClick={() => setActiveTab("projects")}
-                  className="bg-white border border-[#E1D3C1]/30 hover:border-[#D59318]/50 p-6 rounded-2xl shadow-sm space-y-3 cursor-pointer group transition-all duration-300"
+                  className="bg-white border border-[#E1D3C1]/30 hover:border-[#F3C33D]/50 p-6 rounded-2xl shadow-sm space-y-3 cursor-pointer group transition-all duration-300"
                 >
-                  <span className="text-[10px] uppercase text-neutral-400 font-bold tracking-widest group-hover:text-[#D59318]">Portfolio Projects</span>
+                  <span className="text-[10px] uppercase text-neutral-400 font-bold tracking-widest group-hover:text-[#F3C33D]">Portfolio Projects</span>
                   <div className="flex justify-between items-baseline">
                     <span className="text-4xl font-serif text-neutral-800">{projects.length}</span>
                     <span className="text-xs text-neutral-400 group-hover:translate-x-1.5 transition-transform">Configure →</span>
@@ -1363,20 +1594,19 @@ export default function AdminDashboardPage() {
 
                 <div 
                   onClick={() => setActiveTab("services")}
-                  className="bg-white border border-[#E1D3C1]/30 hover:border-[#D59318]/50 p-6 rounded-2xl shadow-sm space-y-3 cursor-pointer group transition-all duration-300"
+                  className="bg-white border border-[#E1D3C1]/30 hover:border-[#F3C33D]/50 p-6 rounded-2xl shadow-sm space-y-3 cursor-pointer group transition-all duration-300"
                 >
-                  <span className="text-[10px] uppercase text-neutral-400 font-bold tracking-widest group-hover:text-[#D59318]">Design Domains</span>
+                  <span className="text-[10px] uppercase text-neutral-400 font-bold tracking-widest group-hover:text-[#F3C33D]">Design Domains</span>
                   <div className="flex justify-between items-baseline">
                     <span className="text-4xl font-serif text-neutral-800">{services.length}</span>
                     <span className="text-xs text-neutral-400 group-hover:translate-x-1.5 transition-transform">Configure →</span>
                   </div>
                 </div>
-
-                <div 
+<div 
                   onClick={() => setActiveTab("testimonials")}
-                  className="bg-white border border-[#E1D3C1]/30 hover:border-[#D59318]/50 p-6 rounded-2xl shadow-sm space-y-3 cursor-pointer group transition-all duration-300"
+                  className="bg-white border border-[#E1D3C1]/30 hover:border-[#F3C33D]/50 p-6 rounded-2xl shadow-sm space-y-3 cursor-pointer group transition-all duration-300"
                 >
-                  <span className="text-[10px] uppercase text-neutral-400 font-bold tracking-widest group-hover:text-[#D59318]">Testimonial Reviews</span>
+                  <span className="text-[10px] uppercase text-neutral-400 font-bold tracking-widest group-hover:text-[#F3C33D]">Testimonial Reviews</span>
                   <div className="flex justify-between items-baseline">
                     <span className="text-4xl font-serif text-neutral-800">{testimonials.length}</span>
                     <span className="text-xs text-neutral-400 group-hover:translate-x-1.5 transition-transform">Configure →</span>
@@ -1391,7 +1621,7 @@ export default function AdminDashboardPage() {
                 <div className="lg:col-span-12 bg-white border border-[#E1D3C1]/40 rounded-3xl p-6 shadow-sm space-y-5">
                   <div className="flex justify-between items-center border-b border-neutral-100 pb-3">
                     <h3 className="font-serif text-lg text-neutral-800 font-semibold">Recent Portfolio Additions</h3>
-                    <button onClick={() => setActiveTab("projects")} className="text-xs text-[#D59318] font-semibold hover:underline">See All</button>
+                    <button onClick={() => setActiveTab("projects")} className="text-xs text-[#F3C33D] font-semibold hover:underline">See All</button>
                   </div>
 
                   <div className="space-y-3">
@@ -1406,7 +1636,7 @@ export default function AdminDashboardPage() {
                                 <Image src={p.image} alt={p.title} fill unoptimized className="object-cover" />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-[#F5EDE0]">
-                                  <span className="text-[#C27A32] text-xs font-bold">{p.title?.charAt(0) || "?"}</span>
+                                  <span className="text-[#F3C33D] text-xs font-bold">{p.title?.charAt(0) || "?"}</span>
                                 </div>
                               )}
                             </div>
@@ -1442,7 +1672,7 @@ export default function AdminDashboardPage() {
               <div className="bg-white border border-[#E1D3C1]/40 rounded-[32px] p-6 sm:p-8 shadow-[0_10px_35px_rgba(70,55,40,0.02)] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-[#C27A32] font-semibold">Homepage Media Control</span>
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-[#F3C33D] font-semibold">Homepage Media Control</span>
                     <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF6F0] border border-[#E1D3C1]/60 text-[#252A24]">
                       Active: {heroType === "video" ? "🎥 Ambient Video" : "🖼️ Still Image"}
                     </span>
@@ -1464,7 +1694,7 @@ export default function AdminDashboardPage() {
                   <button
                     onClick={handleSaveHero}
                     disabled={isHeroSaving}
-                    className="bg-[#D59318] hover:bg-[#B87D0C] text-white text-[10px] font-bold tracking-widest uppercase px-6 py-3 rounded-full transition-all cursor-pointer shadow-sm hover:shadow active:scale-95 disabled:opacity-50"
+                    className="bg-[#F3C33D] hover:bg-[#E5B22D] text-white text-[10px] font-bold tracking-widest uppercase px-6 py-3 rounded-full transition-all cursor-pointer shadow-sm hover:shadow active:scale-95 disabled:opacity-50"
                   >
                     {isHeroSaving ? "Saving..." : "Save Banner Settings"}
                   </button>
@@ -1478,7 +1708,7 @@ export default function AdminDashboardPage() {
                   onClick={() => setHeroType("video")}
                   className={`p-6 sm:p-7 rounded-[28px] border-2 cursor-pointer transition-all duration-300 relative group ${
                     heroType === "video"
-                      ? "bg-white border-[#D59318] shadow-[0_12px_36px_rgba(213, 147, 24,0.12)]"
+                      ? "bg-white border-[#F3C33D] shadow-[0_12px_36px_rgba(243, 195, 61,0.12)]"
                       : "bg-white/80 border-[#E1D3C1]/40 hover:border-neutral-300 hover:bg-white"
                   }`}
                 >
@@ -1487,7 +1717,7 @@ export default function AdminDashboardPage() {
                       🎥
                     </div>
                     {heroType === "video" ? (
-                      <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-[#D59318] text-white shadow-sm">
+                      <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-[#F3C33D] text-white shadow-sm">
                         Active Mode
                       </span>
                     ) : (
@@ -1500,7 +1730,7 @@ export default function AdminDashboardPage() {
                   <p className="text-xs text-neutral-500 leading-relaxed font-light mb-4">
                     Full-bleed looping background video with cinematic architectural movements, muted ambient playback, and responsive viewport sizing.
                   </p>
-                  <div className="flex items-center gap-2 text-[11px] font-semibold text-[#C27A32]">
+                  <div className="flex items-center gap-2 text-[11px] font-semibold text-[#F3C33D]">
                     <span>Format: MP4 / WebM</span>
                     <span>•</span>
                     <span>Autoplay + Loop</span>
@@ -1512,16 +1742,16 @@ export default function AdminDashboardPage() {
                   onClick={() => setHeroType("image")}
                   className={`p-6 sm:p-7 rounded-[28px] border-2 cursor-pointer transition-all duration-300 relative group ${
                     heroType === "image"
-                      ? "bg-white border-[#D59318] shadow-[0_12px_36px_rgba(213, 147, 24,0.12)]"
+                      ? "bg-white border-[#F3C33D] shadow-[0_12px_36px_rgba(243, 195, 61,0.12)]"
                       : "bg-white/80 border-[#E1D3C1]/40 hover:border-neutral-300 hover:bg-white"
                   }`}
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#C27A32] to-[#8C521B] text-white flex items-center justify-center text-xl shadow-sm">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#F3C33D] to-[#8C521B] text-white flex items-center justify-center text-xl shadow-sm">
                       🖼️
                     </div>
                     {heroType === "image" ? (
-                      <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-[#D59318] text-white shadow-sm">
+                      <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-[#F3C33D] text-white shadow-sm">
                         Active Mode
                       </span>
                     ) : (
@@ -1534,7 +1764,7 @@ export default function AdminDashboardPage() {
                   <p className="text-xs text-neutral-500 leading-relaxed font-light mb-4">
                     Ultra-crisp luxury interior portrait or architectural still. Loads instantly with next/image priority rendering, high fidelity, and zero buffering.
                   </p>
-                  <div className="flex items-center gap-2 text-[11px] font-semibold text-[#C27A32]">
+                  <div className="flex items-center gap-2 text-[11px] font-semibold text-[#F3C33D]">
                     <span>Format: JPG / PNG / WebP</span>
                     <span>•</span>
                     <span>Instant High-DPI</span>
@@ -1547,7 +1777,7 @@ export default function AdminDashboardPage() {
                 {/* Left Column: Form & Presets */}
                 <div className="lg:col-span-6 bg-white border border-[#E1D3C1]/40 rounded-[32px] p-6 sm:p-8 shadow-[0_12px_40px_rgba(70,55,40,0.03)] space-y-6">
                   <div>
-                    <span className="text-[10px] uppercase tracking-[0.25em] text-[#C27A32] font-bold block mb-1">
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold block mb-1">
                       MEDIA ASSET SETTINGS
                     </span>
                     <h3 className="font-serif text-xl text-[#252A24]">
@@ -1565,7 +1795,7 @@ export default function AdminDashboardPage() {
                       value={heroTitle}
                       onChange={(e) => setHeroTitle(e.target.value)}
                       placeholder="e.g. SPARK INTERIORS"
-                      className="w-full text-xs bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 outline-none focus:border-[#D59318] transition-colors"
+                      className="w-full text-xs bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 outline-none focus:border-[#F3C33D] transition-colors"
                     />
                   </div>
 
@@ -1581,7 +1811,7 @@ export default function AdminDashboardPage() {
                           value={heroVideoUrl}
                           onChange={(e) => setHeroVideoUrl(e.target.value)}
                           placeholder="/videos/hero-banner.mp4 or https://..."
-                          className="w-full text-xs bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 outline-none focus:border-[#D59318] transition-colors"
+                          className="w-full text-xs bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 outline-none focus:border-[#F3C33D] transition-colors"
                         />
                       </div>
 
@@ -1619,7 +1849,7 @@ export default function AdminDashboardPage() {
                           value={heroImageUrl}
                           onChange={(e) => setHeroImageUrl(e.target.value)}
                           placeholder="/hero-banner-image.jpg or https://..."
-                          className="w-full text-xs bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 outline-none focus:border-[#D59318] transition-colors"
+                          className="w-full text-xs bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 outline-none focus:border-[#F3C33D] transition-colors"
                         />
                       </div>
 
@@ -1648,7 +1878,7 @@ export default function AdminDashboardPage() {
                               }`}
                             >
                               <span className="truncate">{preset.name}</span>
-                              {heroImageUrl === preset.url && <span className="text-[10px] text-[#D59318]">✓</span>}
+                              {heroImageUrl === preset.url && <span className="text-[10px] text-[#F3C33D]">✓</span>}
                             </button>
                           ))}
                         </div>
@@ -1672,7 +1902,7 @@ export default function AdminDashboardPage() {
                       type="button"
                       disabled={isHeroUploading}
                       onClick={() => heroFileRef.current?.click()}
-                      className="w-full py-3.5 px-4 rounded-xl border border-dashed border-[#C27A32]/60 hover:border-[#D59318] bg-[#FAF6F0]/50 hover:bg-[#FAF6F0] text-xs font-semibold text-[#8C521B] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                      className="w-full py-3.5 px-4 rounded-xl border border-dashed border-[#F3C33D]/60 hover:border-[#F3C33D] bg-[#FAF6F0]/50 hover:bg-[#FAF6F0] text-xs font-semibold text-[#8C521B] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                     >
                       <span>📁</span>
                       <span>{isHeroUploading ? "Uploading file..." : `Upload ${heroType === "video" ? "Video" : "Image"} from Device`}</span>
@@ -1696,7 +1926,7 @@ export default function AdminDashboardPage() {
                 <div className="lg:col-span-6 bg-white border border-[#E1D3C1]/40 rounded-[32px] p-6 sm:p-8 shadow-[0_12px_40px_rgba(70,55,40,0.03)] space-y-4 lg:sticky lg:top-8">
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-[#C27A32] font-bold block mb-1">
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold block mb-1">
                         LIVE PREVIEW
                       </span>
                       <h3 className="font-serif text-lg text-[#252A24]">Hero Presentation Preview</h3>
@@ -1741,7 +1971,7 @@ export default function AdminDashboardPage() {
                         {heroTitle || "SPARK INTERIORS"}
                       </h4>
                       <div className="flex gap-2 pt-1">
-                        <div className="px-3 py-1 rounded-full bg-[#D59318] text-white text-[8px] font-bold uppercase tracking-wider">
+                        <div className="px-3 py-1 rounded-full bg-[#F3C33D] text-white text-[8px] font-bold uppercase tracking-wider">
                           Start Project
                         </div>
                         <div className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-[8px] font-bold uppercase tracking-wider">
@@ -1768,7 +1998,7 @@ export default function AdminDashboardPage() {
               {/* Form */}
               <div className="lg:col-span-4 bg-white border border-[#E1D3C1]/40 rounded-[28px] p-6 shadow-[0_12px_40px_rgba(70,55,40,0.03)] space-y-5 lg:sticky lg:top-8">
                 <div>
-                  <span className="text-[10px] uppercase tracking-[0.25em] text-[#C27A32] font-bold block mb-1">
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold block mb-1">
                     {editingId ? "UPDATE RECORD" : "CREATE NEW RECORD"}
                   </span>
                   <h2 className="font-serif text-2xl text-[#252A24] font-normal">
@@ -1785,28 +2015,20 @@ export default function AdminDashboardPage() {
                       value={projTitle}
                       onChange={(e) => setProjTitle(e.target.value)}
                       placeholder="e.g. The Travertine Hearth"
-                      className="w-full px-4 py-2.5 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#D59318] transition-colors text-neutral-850"
+                      className="w-full px-4 py-2.5 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] transition-colors text-neutral-850"
                     />
                   </div>
 
                   <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <label className="block text-[10px] uppercase text-neutral-400 tracking-wider font-semibold">Room Category *</label>
-                      <span className="text-[9.5px] text-[#C27A32] font-medium font-mono">
-                        ✦ Synced with Services
-                      </span>
-                    </div>
-                    <select
+                    <label className="block text-[10px] uppercase text-neutral-400 tracking-wider mb-1.5 font-semibold">Room Category *</label>
+                    <input
+                      type="text"
+                      required
                       value={projCategory}
                       onChange={(e) => setProjCategory(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#D59318] transition-colors text-neutral-850 cursor-pointer"
-                    >
-                      {dynamicRoomCategories.map((cat) => (
-                        <option key={cat.value} value={cat.value}>
-                          {cat.label}
-                        </option>
-                      ))}
-                    </select>
+                      placeholder="e.g. Modular Kitchen, False Ceiling, Living Room"
+                      className="w-full px-4 py-2.5 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] transition-colors text-neutral-850"
+                    />
                   </div>
 
                   <div>
@@ -1835,7 +2057,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <div className="pt-2 flex gap-2.5">
-                    <button type="submit" className="flex-grow bg-[#D59318] hover:bg-[#B87D0C] text-white text-xs font-bold tracking-[0.2em] py-3 rounded-full transition-all duration-300 uppercase cursor-pointer">
+                    <button type="submit" className="flex-grow bg-[#F3C33D] hover:bg-[#E5B22D] text-white text-xs font-bold tracking-[0.2em] py-3 rounded-full transition-all duration-300 uppercase cursor-pointer">
                       {editingId ? "Save Changes" : "Create Project"}
                     </button>
                     {editingId && (
@@ -1849,7 +2071,7 @@ export default function AdminDashboardPage() {
               <div className="lg:col-span-8 bg-white border border-[#E1D3C1]/40 rounded-[28px] p-6 sm:p-7 shadow-[0_12px_40px_rgba(70,55,40,0.03)] space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E1D3C1]/30 pb-4">
                   <div>
-                    <span className="text-[10px] uppercase tracking-[0.25em] text-[#C27A32] font-bold block mb-0.5">
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold block mb-0.5">
                       CMS DATABASE
                     </span>
                     <h2 className="font-serif text-2xl text-[#252A24] font-normal uppercase tracking-wider">
@@ -1872,7 +2094,7 @@ export default function AdminDashboardPage() {
                       value={adminProjSearch}
                       onChange={(e) => setAdminProjSearch(e.target.value)}
                       placeholder="Search projects..."
-                      className="w-full pl-8 pr-3 py-1.5 bg-[#FAF6F0]/60 border border-[#E1D3C1]/40 rounded-xl text-xs focus:outline-none focus:border-[#D59318] transition-colors"
+                      className="w-full pl-8 pr-3 py-1.5 bg-[#FAF6F0]/60 border border-[#E1D3C1]/40 rounded-xl text-xs focus:outline-none focus:border-[#F3C33D] transition-colors"
                     />
                     <svg className="w-3.5 h-3.5 text-neutral-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -1880,39 +2102,111 @@ export default function AdminDashboardPage() {
                   </div>
                 </div>
 
-                {/* Category Filter Pills */}
-                <div className="flex flex-wrap gap-1.5 pb-1">
+                {/* Category Filter Pills & Direct Edit Option */}
+                <div className="flex flex-wrap items-center gap-1.5 pb-1">
                   {[
                     { value: "all", label: "All" },
                     ...dynamicRoomCategories
-                  ].map((filter) => (
-                    <button
-                      key={filter.value}
-                      type="button"
-                      onClick={() => setAdminProjCategoryFilter(filter.value)}
-                      className={`text-[9.5px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full transition-all cursor-pointer ${
-                        adminProjCategoryFilter === filter.value
-                          ? "bg-[#D59318] text-white shadow-sm"
-                          : "bg-[#FAF6F0] text-neutral-600 hover:bg-[#FAF6F0]/80 hover:text-[#252A24]"
-                      }`}
-                    >
-                      {filter.label}
-                    </button>
-                  ))}
+                  ].map((filter) => {
+                    const isSelected = adminProjCategoryFilter === filter.value;
+                    return (
+                      <div key={filter.value} className="inline-flex items-center">
+                        <button
+                          type="button"
+                          onClick={() => setAdminProjCategoryFilter(filter.value)}
+                          className={`text-[9.5px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full transition-all cursor-pointer inline-flex items-center gap-1.5 ${
+                            isSelected
+                              ? "bg-[#F3C33D] text-white shadow-sm"
+                              : "bg-[#FAF6F0] text-neutral-600 hover:bg-[#FAF6F0]/80 hover:text-[#252A24]"
+                          }`}
+                        >
+                          <span>{filter.label}</span>
+                          {filter.value !== "all" && (
+                            <span
+                              title={`Edit "${filter.label}" Name`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingCategoryValue(filter.value);
+                                setEditingCategoryName(filter.label);
+                              }}
+                              className={`p-0.5 rounded-full transition-all cursor-pointer ${
+                                isSelected 
+                                  ? "text-white/85 hover:text-white hover:bg-white/20" 
+                                  : "text-neutral-400 hover:text-[#F3C33D] hover:bg-neutral-200/50"
+                              }`}
+                            >
+                              <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                              </svg>
+                            </span>
+                          )}
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
+
+                {/* Direct Category Rename Modal */}
+                {editingCategoryValue && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl p-6 max-w-sm w-full border border-[#E1D3C1]/50 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+                      <div>
+                        <span className="text-[10px] uppercase tracking-widest text-[#F3C33D] font-bold block mb-1">
+                          EDIT CATEGORY NAME
+                        </span>
+                        <h3 className="font-serif text-lg text-[#252A24]">
+                          Rename Category
+                        </h3>
+                        <p className="text-xs text-neutral-500 mt-1">
+                          Renaming will update this category in the dashboard and across the website project gallery.
+                        </p>
+                      </div>
+
+                      <input
+                        type="text"
+                        value={editingCategoryName}
+                        onChange={(e) => setEditingCategoryName(e.target.value)}
+                        placeholder="Enter category name..."
+                        className="w-full px-3.5 py-2 bg-[#FAF6F0]/60 border border-[#E1D3C1]/50 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] text-neutral-850"
+                        autoFocus
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleSaveCategoryRename();
+                          }
+                          if (e.key === "Escape") {
+                            setEditingCategoryValue(null);
+                          }
+                        }}
+                      />
+
+                      <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E1D3C1]/30">
+                        <button
+                          type="button"
+                          onClick={() => setEditingCategoryValue(null)}
+                          className="px-3 py-1.5 rounded-xl text-xs font-semibold text-neutral-600 hover:bg-neutral-100 transition-colors cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          disabled={isRenamingCategory || !editingCategoryName.trim()}
+                          onClick={handleSaveCategoryRename}
+                          className="px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#F3C33D] text-white hover:bg-[#dcae32] transition-colors shadow-sm disabled:opacity-50 cursor-pointer"
+                        >
+                          {isRenamingCategory ? "Saving..." : "Save Name"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* 2-Column Compact Scrollable Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[560px] overflow-y-auto pr-1">
-                  {projects
-                    .filter((p) => {
-                      const matchesCategory = adminProjCategoryFilter === "all" || p.category === adminProjCategoryFilter;
-                      const matchesSearch = !adminProjSearch.trim() || p.title.toLowerCase().includes(adminProjSearch.toLowerCase());
-                      return matchesCategory && matchesSearch;
-                    })
-                    .map((p) => (
+                  {projects.filter(filterProjectMatches).map((p) => (
                       <div
                         key={p.id}
-                        className="flex items-center justify-between p-3 bg-[#FAF6F0]/50 border border-[#E1D3C1]/30 rounded-2xl hover:border-[#D59318]/40 hover:bg-white transition-all shadow-[0_2px_8px_rgba(70,55,40,0.02)] gap-3 group"
+                        className="flex items-center justify-between p-3 bg-[#FAF6F0]/50 border border-[#E1D3C1]/30 rounded-2xl hover:border-[#F3C33D]/40 hover:bg-white transition-all shadow-[0_2px_8px_rgba(70,55,40,0.02)] gap-3 group"
                       >
                         <div className="flex items-center gap-3 min-w-0 flex-grow">
                           <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-neutral-100 flex-shrink-0 border border-[#E1D3C1]/30">
@@ -1920,13 +2214,13 @@ export default function AdminDashboardPage() {
                               <Image src={p.image} alt={p.title} fill unoptimized className="object-cover object-center group-hover:scale-105 transition-transform" />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center bg-[#F5EDE0]">
-                                <span className="text-[#C27A32] text-xs font-bold">{p.title?.charAt(0) || "?"}</span>
+                                <span className="text-[#F3C33D] text-xs font-bold">{p.title?.charAt(0) || "?"}</span>
                               </div>
                             )}
                           </div>
                           <div className="min-w-0 flex-grow">
-                            <span className="text-[8px] uppercase tracking-wider bg-[#D59318]/10 text-[#D59318] px-2 py-0.5 rounded font-bold inline-block mb-0.5">
-                              {p.categoryLabel}
+                            <span className="text-[8px] uppercase tracking-wider bg-[#F3C33D]/10 text-[#F3C33D] px-2 py-0.5 rounded font-bold inline-block mb-0.5">
+                              {getCleanCategoryLabel(p.category)}
                             </span>
                             <h4 className="font-serif text-sm text-[#252A24] font-semibold truncate" title={p.title}>
                               {p.title}
@@ -1936,7 +2230,7 @@ export default function AdminDashboardPage() {
                         <div className="flex items-center gap-1.5 flex-shrink-0">
                           <button
                             onClick={() => handleStartEditProject(p)}
-                            className="bg-white border border-[#E1D3C1]/40 hover:bg-[#D59318] hover:text-white hover:border-[#D59318] text-[#C27A32] px-2.5 py-1 rounded-lg text-[9.5px] font-bold tracking-wider uppercase transition-all shadow-sm cursor-pointer"
+                            className="bg-white border border-[#E1D3C1]/40 hover:bg-[#F3C33D] hover:text-white hover:border-[#F3C33D] text-[#F3C33D] px-2.5 py-1 rounded-lg text-[9.5px] font-bold tracking-wider uppercase transition-all shadow-sm cursor-pointer"
                           >
                             Edit
                           </button>
@@ -1950,11 +2244,7 @@ export default function AdminDashboardPage() {
                       </div>
                     ))}
 
-                  {projects.filter((p) => {
-                    const matchesCategory = adminProjCategoryFilter === "all" || p.category === adminProjCategoryFilter;
-                    const matchesSearch = !adminProjSearch.trim() || p.title.toLowerCase().includes(adminProjSearch.toLowerCase());
-                    return matchesCategory && matchesSearch;
-                  }).length === 0 && (
+                  {projects.filter(filterProjectMatches).length === 0 && (
                     <div className="col-span-full py-12 text-center text-neutral-400 text-xs">
                       No projects found matching current filter.
                     </div>
@@ -1971,8 +2261,8 @@ export default function AdminDashboardPage() {
               <div className="lg:col-span-5 bg-white border border-[#E1D3C1]/40 rounded-[28px] p-6 sm:p-7 shadow-[0_12px_40px_rgba(70,55,40,0.03)] space-y-5 lg:sticky lg:top-8">
                 <div className="border-b border-[#E1D3C1]/30 pb-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] uppercase tracking-[0.25em] text-[#C27A32] font-bold flex items-center gap-1.5">
-                      <span className="text-[#D59318] text-xs font-bold">✦</span>
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold flex items-center gap-1.5">
+                      <span className="text-[#F3C33D] text-xs font-bold">✦</span>
                       <span>{editingId ? "EDITING SERVICE" : "ADD NEW SERVICE"}</span>
                     </span>
                     {editingId && (
@@ -2011,7 +2301,7 @@ export default function AdminDashboardPage() {
                       value={serviceName}
                       onChange={(e) => setServiceName(e.target.value)}
                       placeholder="e.g. Modular Kitchens"
-                      className="w-full px-4 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/40 rounded-xl text-sm focus:outline-none focus:border-[#D59318] focus:bg-white transition-all text-neutral-850"
+                      className="w-full px-4 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/40 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] focus:bg-white transition-all text-neutral-850"
                     />
                   </div>
 
@@ -2031,7 +2321,7 @@ export default function AdminDashboardPage() {
                         value={serviceImage}
                         onChange={(e) => setServiceImage(e.target.value)}
                         placeholder="Or type path /uploads/name.jpg"
-                        className="w-full px-4 py-2.5 bg-[#FAF6F0]/40 border border-[#E1D3C1]/40 rounded-xl text-xs focus:outline-none focus:border-[#D59318] focus:bg-white transition-all"
+                        className="w-full px-4 py-2.5 bg-[#FAF6F0]/40 border border-[#E1D3C1]/40 rounded-xl text-xs focus:outline-none focus:border-[#F3C33D] focus:bg-white transition-all"
                       />
                     </div>
                     {serviceImage && (
@@ -2062,7 +2352,7 @@ export default function AdminDashboardPage() {
                       value={serviceDesc}
                       onChange={(e) => setServiceDesc(e.target.value)}
                       placeholder="Describe what we design (e.g. ergonomic layouts, custom cabinetry, warm finishes...)"
-                      className="w-full px-4 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/40 rounded-xl text-sm focus:outline-none focus:border-[#D59318] focus:bg-white transition-all text-neutral-850"
+                      className="w-full px-4 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/40 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] focus:bg-white transition-all text-neutral-850"
                     />
                   </div>
 
@@ -2070,7 +2360,7 @@ export default function AdminDashboardPage() {
                   <div className="pt-2 flex gap-3">
                     <button
                       type="submit"
-                      className="flex-grow bg-gradient-to-r from-[#D59318] to-[#C08A4E] hover:from-[#B87D0C] hover:to-[#A86F08] text-white text-xs font-bold tracking-[0.2em] py-3.5 rounded-full transition-all duration-300 uppercase cursor-pointer shadow-sm shadow-[#D59318]/25 active:scale-[0.98]"
+                      className="flex-grow bg-gradient-to-r from-[#F3C33D] to-[#F3C33D] hover:from-[#E5B22D] hover:to-[#D4A528] text-white text-xs font-bold tracking-[0.2em] py-3.5 rounded-full transition-all duration-300 uppercase cursor-pointer shadow-sm shadow-[#F3C33D]/25 active:scale-[0.98]"
                     >
                       {editingId ? "✓ Save Changes" : "+ Create Service"}
                     </button>
@@ -2092,8 +2382,8 @@ export default function AdminDashboardPage() {
                 {/* Header with Title, Search, and Grid/List View Switcher */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E1D3C1]/30 pb-4">
                   <div>
-                    <span className="text-[10px] uppercase tracking-[0.25em] text-[#C27A32] font-bold block mb-0.5 flex items-center gap-1.5">
-                      <span className="text-[#D59318] text-xs font-bold">✦</span>
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold block mb-0.5 flex items-center gap-1.5">
+                      <span className="text-[#F3C33D] text-xs font-bold">✦</span>
                       <span>CMS DATABASE</span>
                     </span>
                     <h2 className="font-serif text-2xl text-[#252A24] font-normal uppercase tracking-wider">
@@ -2109,7 +2399,7 @@ export default function AdminDashboardPage() {
                         value={adminServiceSearch}
                         onChange={(e) => setAdminServiceSearch(e.target.value)}
                         placeholder="Search services..."
-                        className="w-full pl-8 pr-7 py-1.5 bg-[#FAF6F0]/60 border border-[#E1D3C1]/40 rounded-xl text-xs focus:outline-none focus:border-[#D59318] transition-colors"
+                        className="w-full pl-8 pr-7 py-1.5 bg-[#FAF6F0]/60 border border-[#E1D3C1]/40 rounded-xl text-xs focus:outline-none focus:border-[#F3C33D] transition-colors"
                       />
                       <svg className="w-3.5 h-3.5 text-neutral-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -2133,7 +2423,7 @@ export default function AdminDashboardPage() {
                         onClick={() => setServiceViewMode("grid")}
                         className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                           serviceViewMode === "grid"
-                            ? "bg-white text-[#D59318] shadow-sm font-bold"
+                            ? "bg-white text-[#F3C33D] shadow-sm font-bold"
                             : "text-neutral-450 hover:text-neutral-700"
                         }`}
                       >
@@ -2147,7 +2437,7 @@ export default function AdminDashboardPage() {
                         onClick={() => setServiceViewMode("list")}
                         className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                           serviceViewMode === "list"
-                            ? "bg-white text-[#D59318] shadow-sm font-bold"
+                            ? "bg-white text-[#F3C33D] shadow-sm font-bold"
                             : "text-neutral-450 hover:text-neutral-700"
                         }`}
                       >
@@ -2170,8 +2460,8 @@ export default function AdminDashboardPage() {
                             key={s.id}
                             className={`group relative flex flex-col justify-between p-3 rounded-2xl border transition-all duration-300 ${
                               editingId === s.id
-                                ? "bg-amber-50/70 border-[#D59318] shadow-md ring-2 ring-[#D59318]/20"
-                                : "bg-[#FAF6F0]/40 border-[#E1D3C1]/30 hover:bg-white hover:border-[#D59318]/50 hover:shadow-[0_8px_20px_rgba(70,55,40,0.05)]"
+                                ? "bg-amber-50/70 border-[#F3C33D] shadow-md ring-2 ring-[#F3C33D]/20"
+                                : "bg-[#FAF6F0]/40 border-[#E1D3C1]/30 hover:bg-white hover:border-[#F3C33D]/50 hover:shadow-[0_8px_20px_rgba(70,55,40,0.05)]"
                             }`}
                           >
                             <div>
@@ -2187,7 +2477,7 @@ export default function AdminDashboardPage() {
                                   />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center bg-[#F5EDE0]">
-                                    <span className="text-[#C27A32] text-sm font-bold">{s.name?.charAt(0) || "?"}</span>
+                                    <span className="text-[#F3C33D] text-sm font-bold">{s.name?.charAt(0) || "?"}</span>
                                   </div>
                                 )}
                                 <div className="absolute top-2 left-2 flex items-center gap-1.5">
@@ -2195,7 +2485,7 @@ export default function AdminDashboardPage() {
                                     #{s.id}
                                   </span>
                                   {editingId === s.id && (
-                                    <span className="px-2 py-0.5 rounded-md bg-[#D59318] text-white text-[9px] font-bold tracking-wider uppercase animate-pulse">
+                                    <span className="px-2 py-0.5 rounded-md bg-[#F3C33D] text-white text-[9px] font-bold tracking-wider uppercase animate-pulse">
                                       Editing
                                     </span>
                                   )}
@@ -2203,7 +2493,7 @@ export default function AdminDashboardPage() {
                               </div>
 
                               {/* Title & Description */}
-                              <h4 className="font-serif text-[15px] text-[#252A24] font-semibold truncate group-hover:text-[#D59318] transition-colors" title={s.name}>
+                              <h4 className="font-serif text-[15px] text-[#252A24] font-semibold truncate group-hover:text-[#F3C33D] transition-colors" title={s.name}>
                                 {s.name}
                               </h4>
                               <p className="text-[11px] text-neutral-500 line-clamp-2 leading-relaxed mt-1 font-light" title={s.description}>
@@ -2216,7 +2506,7 @@ export default function AdminDashboardPage() {
                               <button
                                 type="button"
                                 onClick={() => handleStartEditService(s)}
-                                className="bg-white border border-[#E1D3C1]/50 hover:bg-[#D59318] hover:text-white hover:border-[#D59318] text-[#C27A32] px-2.5 py-1 rounded-lg text-[9.5px] font-bold tracking-wider uppercase transition-all shadow-sm cursor-pointer"
+                                className="bg-white border border-[#E1D3C1]/50 hover:bg-[#F3C33D] hover:text-white hover:border-[#F3C33D] text-[#F3C33D] px-2.5 py-1 rounded-lg text-[9.5px] font-bold tracking-wider uppercase transition-all shadow-sm cursor-pointer"
                               >
                                 Edit
                               </button>
@@ -2241,8 +2531,8 @@ export default function AdminDashboardPage() {
                             key={s.id}
                             className={`flex items-center justify-between p-3 rounded-2xl border transition-all duration-300 gap-3 group ${
                               editingId === s.id
-                                ? "bg-amber-50/70 border-[#D59318] shadow-md ring-2 ring-[#D59318]/20"
-                                : "bg-[#FAF6F0]/40 border-[#E1D3C1]/30 hover:bg-white hover:border-[#D59318]/50 hover:shadow-sm"
+                                ? "bg-amber-50/70 border-[#F3C33D] shadow-md ring-2 ring-[#F3C33D]/20"
+                                : "bg-[#FAF6F0]/40 border-[#E1D3C1]/30 hover:bg-white hover:border-[#F3C33D]/50 hover:shadow-sm"
                             }`}
                           >
                             <div className="flex items-center gap-3 min-w-0 flex-grow">
@@ -2257,13 +2547,13 @@ export default function AdminDashboardPage() {
                                   />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center bg-[#F5EDE0]">
-                                    <span className="text-[#C27A32] text-xs font-bold">{s.name?.charAt(0) || "?"}</span>
+                                    <span className="text-[#F3C33D] text-xs font-bold">{s.name?.charAt(0) || "?"}</span>
                                   </div>
                                 )}
                               </div>
                               <div className="min-w-0 flex-grow">
                                 <div className="flex items-center gap-2 mb-0.5">
-                                  <span className="text-[8.5px] font-mono bg-[#D59318]/10 text-[#C27A32] px-1.5 py-0.5 rounded font-semibold">
+                                  <span className="text-[8.5px] font-mono bg-[#F3C33D]/10 text-[#F3C33D] px-1.5 py-0.5 rounded font-semibold">
                                     #{s.id}
                                   </span>
                                   {editingId === s.id && (
@@ -2272,7 +2562,7 @@ export default function AdminDashboardPage() {
                                     </span>
                                   )}
                                 </div>
-                                <h4 className="font-serif text-sm text-[#252A24] font-semibold truncate group-hover:text-[#D59318] transition-colors">
+                                <h4 className="font-serif text-sm text-[#252A24] font-semibold truncate group-hover:text-[#F3C33D] transition-colors">
                                   {s.name}
                                 </h4>
                                 <span className="text-[10.5px] text-neutral-450 block truncate max-w-sm font-light">
@@ -2285,7 +2575,7 @@ export default function AdminDashboardPage() {
                               <button
                                 type="button"
                                 onClick={() => handleStartEditService(s)}
-                                className="bg-white border border-[#E1D3C1]/50 hover:bg-[#D59318] hover:text-white hover:border-[#D59318] text-[#C27A32] px-2.5 py-1 rounded-lg text-[9.5px] font-bold tracking-wider uppercase transition-all shadow-sm cursor-pointer"
+                                className="bg-white border border-[#E1D3C1]/50 hover:bg-[#F3C33D] hover:text-white hover:border-[#F3C33D] text-[#F3C33D] px-2.5 py-1 rounded-lg text-[9.5px] font-bold tracking-wider uppercase transition-all shadow-sm cursor-pointer"
                               >
                                 Edit
                               </button>
@@ -2314,104 +2604,23 @@ export default function AdminDashboardPage() {
 
           {/* TAB 4: TESTIMONIALS MANAGER */}
           {activeTab === "testimonials" && (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-              {/* Form (Only render when editing) */}
-              {editingId && (
-                <div className="lg:col-span-5 bg-white border border-[#E1D3C1]/40 rounded-[32px] p-6 sm:p-8 shadow-[0_12px_40px_rgba(70,55,40,0.03)] space-y-6 lg:sticky lg:top-8">
-                  <div>
-                    <span className="text-[10px] uppercase tracking-[0.25em] text-[#C27A32] font-bold block mb-1">
-                      EDITING TESTIMONIAL
-                    </span>
-                    <h2 className="font-serif text-2xl text-[#252A24] font-normal">
-                      Update Review Details
-                    </h2>
-                  </div>
+            <div className="max-w-4xl mx-auto w-full bg-white border border-[#E1D3C1]/40 rounded-[32px] p-6 sm:p-8 shadow-[0_12px_40px_rgba(70,55,40,0.03)] space-y-6">
+              <div>
+                <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold block mb-1">
+                  CMS DATABASE
+                </span>
+                <h2 className="font-serif text-2xl text-[#252A24] font-normal uppercase tracking-wider">
+                  Existing Testimonials ({testimonials.length})
+                </h2>
+                <p className="text-xs text-neutral-500 mt-1">
+                  Control which client reviews are displayed on the live website. Click status to toggle between Displaying and Hidden.
+                </p>
+              </div>
 
-                  <form onSubmit={handleSaveTestimonial} className="space-y-4">
-                    <div>
-                      <label className="block text-[10px] uppercase text-neutral-400 tracking-wider mb-1.5 font-semibold">Client Name *</label>
-                      <input
-                        type="text"
-                        required
-                        value={testName}
-                        onChange={(e) => setTestName(e.target.value)}
-                        placeholder="e.g. Vikram & Priya"
-                        className="w-full px-4 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#D59318] transition-colors text-neutral-850"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] uppercase text-neutral-400 tracking-wider mb-1.5 font-semibold">Client Project & Location *</label>
-                      <input
-                        type="text"
-                        required
-                        value={testRole}
-                        onChange={(e) => setTestRole(e.target.value)}
-                        placeholder="e.g. The Travertine Hearth, Chennai"
-                        className="w-full px-4 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#D59318] transition-colors text-neutral-850"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] uppercase text-neutral-400 tracking-wider mb-1.5 font-semibold">Project Image Backdrop *</label>
-                      <div className="space-y-2">
-                        <input
-                          type="file"
-                          ref={testFileRef}
-                          accept="image/*"
-                          onChange={(e) => handleFileUpload(e, setTestImage)}
-                          className="w-full text-xs text-neutral-500 cursor-pointer file:cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border file:border-[#E1D3C1]/40 file:text-[10px] file:uppercase file:font-bold file:bg-[#FAF6F0]"
-                        />
-                        <input
-                          type="text"
-                          value={testImage}
-                          onChange={(e) => setTestImage(e.target.value)}
-                          placeholder="Or type path /uploads/name.jpg"
-                          className="w-full px-4 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-xs focus:outline-none"
-                        />
-                      </div>
-                      {testImage && (
-                        <div className="mt-3 relative w-full aspect-[2.1] rounded-xl overflow-hidden border border-[#E1D3C1]/20 bg-neutral-50">
-                          <Image src={testImage} alt="Preview" fill unoptimized className="object-cover object-center" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] uppercase text-neutral-400 tracking-wider mb-1.5 font-semibold">Client Quote *</label>
-                      <textarea
-                        required
-                        rows={4}
-                        value={testQuote}
-                        onChange={(e) => setTestQuote(e.target.value)}
-                        placeholder="Client testimonial review..."
-                        className="w-full px-4 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none text-justify text-neutral-850"
-                      />
-                    </div>
-
-                    <div className="pt-2 flex gap-3">
-                      <button type="submit" className="flex-grow bg-[#D59318] hover:bg-[#B87D0C] text-white text-xs font-bold tracking-[0.2em] py-3.5 rounded-full transition-all duration-300 uppercase cursor-pointer">
-                        Save Changes
-                      </button>
-                      <button type="button" onClick={clearForms} className="bg-[#FAF6F0] border border-[#E1D3C1]/40 hover:bg-neutral-50 text-neutral-600 px-6 py-3.5 rounded-full text-xs font-bold tracking-[0.2em] uppercase transition-all cursor-pointer">Cancel</button>
-                    </div>
-                  </form>
-                </div>
-              )}
-
-              {/* List */}
-              <div className={editingId ? "lg:col-span-7 bg-white border border-[#E1D3C1]/40 rounded-[32px] p-6 sm:p-8 shadow-[0_12px_40px_rgba(70,55,40,0.03)] space-y-6" : "lg:col-span-12 max-w-4xl mx-auto w-full bg-white border border-[#E1D3C1]/40 rounded-[32px] p-6 sm:p-8 shadow-[0_12px_40px_rgba(70,55,40,0.03)] space-y-6"}>
-                <div>
-                  <span className="text-[10px] uppercase tracking-[0.25em] text-[#C27A32] font-bold block mb-1">
-                    CMS DATABASE
-                  </span>
-                  <h2 className="font-serif text-2xl text-[#252A24] font-normal uppercase tracking-wider">
-                    Existing Testimonials ({testimonials.length})
-                  </h2>
-                </div>
-
-                <div className="space-y-4">
-                  {testimonials.map((t) => (
+              <div className="space-y-4">
+                {testimonials.map((t) => {
+                  const isDisplaying = t.approved === 1 || t.approved === true || t.approved === "1";
+                  return (
                     <div key={t.id} className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-4 bg-[#FAF6F0]/40 border border-[#E1D3C1]/20 rounded-2xl gap-4">
                       <div className="flex items-center gap-4 min-w-0 flex-grow">
                         <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-neutral-50 flex-shrink-0 border border-[#E1D3C1]/30">
@@ -2419,32 +2628,40 @@ export default function AdminDashboardPage() {
                             <Image src={t.image} alt={t.name} fill unoptimized className="object-cover object-center" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-[#F5EDE0]">
-                              <span className="text-[#C27A32] text-xs font-bold">{t.name?.charAt(0) || "?"}</span>
+                              <span className="text-[#F3C33D] text-xs font-bold">{t.name?.charAt(0) || "?"}</span>
                             </div>
                           )}
                         </div>
                         <div className="min-w-0 flex-grow">
                           <h4 className="font-serif text-base text-[#252A24] font-semibold truncate">{t.name}</h4>
-                          <span className="text-[10px] text-neutral-450 block truncate">{t.role}</span>
+                          <span className="text-[10px] text-neutral-400 block truncate">{t.role}</span>
+                          {t.quote && (
+                            <p className="text-xs text-neutral-600 line-clamp-1 italic mt-1">&quot;{t.quote}&quot;</p>
+                          )}
                         </div>
                       </div>
                       <div className="flex items-center gap-2 pt-3 sm:pt-0 justify-end border-t sm:border-t-0 border-[#E1D3C1]/20">
                         <button
                           onClick={() => handleToggleApprove(t.id)}
-                          className={`px-3.5 py-1.5 rounded-lg text-[10px] font-bold tracking-widest uppercase transition-all border cursor-pointer ${
-                            t.approved === 1
-                              ? "bg-green-50 hover:bg-green-100 text-green-750 border-green-100"
-                              : "bg-amber-50 hover:bg-amber-100 text-amber-750 border-amber-100"
+                          title={isDisplaying ? "Click to Hide review from public website" : "Click to Display review on public website"}
+                          className={`px-4 py-2 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-all border cursor-pointer shadow-sm ${
+                            isDisplaying
+                              ? "bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                              : "bg-amber-50 hover:bg-amber-100 text-amber-700 border-amber-200"
                           }`}
                         >
-                          {t.approved === 1 ? "✓ Displaying" : "⧗ Hidden"}
+                          {isDisplaying ? "✓ DISPLAYING" : "⌛ HIDDEN"}
                         </button>
-                        <button onClick={() => handleStartEditTestimonial(t)} className="bg-white border border-[#E1D3C1]/40 hover:bg-neutral-50 text-[#C27A32] px-3.5 py-1.5 rounded-lg text-[10px] font-bold tracking-widest uppercase transition-all shadow-sm">Edit</button>
-                        <button onClick={() => handleDeleteItem(t.id, "testimonials")} className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 px-3.5 py-1.5 rounded-lg text-[10px] font-bold tracking-widest uppercase transition-all">Delete</button>
+                        <button
+                          onClick={() => handleDeleteItem(t.id, "testimonials")}
+                          className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 px-3.5 py-2 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-all cursor-pointer"
+                        >
+                          Delete
+                        </button>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -2453,7 +2670,7 @@ export default function AdminDashboardPage() {
           {activeTab === "settings" && (
             <div className="max-w-md mx-auto bg-white border border-[#E1D3C1]/40 rounded-[32px] p-6 sm:p-8 shadow-[0_12px_40px_rgba(70,55,40,0.03)] space-y-6">
               <div>
-                <span className="text-[10px] uppercase tracking-[0.25em] text-[#C27A32] font-bold block mb-1">
+                <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold block mb-1">
                   SECURITY & CREDENTIALS
                 </span>
                 <h2 className="font-serif text-2xl text-[#252A24] font-normal">
@@ -2464,7 +2681,15 @@ export default function AdminDashboardPage() {
                 </p>
               </div>
 
-              <form onSubmit={handleSaveSettings} className="space-y-4">
+              <div className="bg-[#FAF6F0]/70 border border-[#E1D3C1]/50 rounded-2xl p-3.5 flex items-center justify-between text-xs">
+                <div>
+                  <span className="text-[9.5px] uppercase font-bold tracking-wider text-neutral-400 block">Current Active Username</span>
+                  <span className="font-semibold text-neutral-800 font-mono text-sm">{savedUsername}</span>
+                </div>
+                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-[#F3C33D]/20 text-[#D59318]">Active</span>
+              </div>
+
+              <form onSubmit={handleSaveSettings} className="space-y-4" autoComplete="off">
                 <div>
                   <label className="block text-[10px] uppercase text-neutral-400 tracking-wider mb-1.5 font-semibold">
                     Portal Username
@@ -2475,22 +2700,23 @@ export default function AdminDashboardPage() {
                     value={settingsUser}
                     onChange={(e) => setSettingsUser(e.target.value)}
                     placeholder="Enter new username"
-                    className="w-full px-4 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#D59318] transition-colors text-neutral-850"
+                    className="w-full px-4 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] transition-colors text-neutral-850"
                   />
                 </div>
 
                 <div>
                   <label className="block text-[10px] uppercase text-neutral-400 tracking-wider mb-1.5 font-semibold">
-                    Portal Password
+                    New Portal Password
                   </label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
                       required
+                      autoComplete="new-password"
                       value={settingsPass}
                       onChange={(e) => setSettingsPass(e.target.value)}
                       placeholder="Enter new password"
-                      className="w-full pl-4 pr-12 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#D59318] transition-colors text-neutral-850"
+                      className="w-full pl-4 pr-12 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] transition-colors text-neutral-850"
                     />
                     <button
                       type="button"
@@ -2511,10 +2737,28 @@ export default function AdminDashboardPage() {
                   </div>
                 </div>
 
+                <div>
+                  <label className="block text-[10px] uppercase text-neutral-400 tracking-wider mb-1.5 font-semibold">
+                    Confirm New Password
+                  </label>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    autoComplete="new-password"
+                    value={confirmSettingsPass}
+                    onChange={(e) => setConfirmSettingsPass(e.target.value)}
+                    placeholder="Re-enter new password"
+                    className="w-full px-4 py-3 bg-[#FAF6F0]/40 border border-[#E1D3C1]/30 rounded-xl text-sm focus:outline-none focus:border-[#F3C33D] transition-colors text-neutral-850"
+                  />
+                  {confirmSettingsPass && settingsPass !== confirmSettingsPass && (
+                    <p className="text-[11px] text-red-500 mt-1">Passwords do not match.</p>
+                  )}
+                </div>
+
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full bg-[#D59318] hover:bg-[#B87D0C] text-white text-xs font-bold tracking-[0.2em] py-3.5 rounded-full transition-all duration-300 uppercase cursor-pointer shadow-md"
+                    className="w-full bg-[#F3C33D] hover:bg-[#E5B22D] text-white text-xs font-bold tracking-[0.2em] py-3.5 rounded-full transition-all duration-300 uppercase cursor-pointer shadow-md"
                   >
                     Save Credentials
                   </button>

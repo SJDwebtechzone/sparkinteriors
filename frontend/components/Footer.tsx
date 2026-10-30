@@ -9,16 +9,46 @@ interface FooterServiceItem {
   name: string;
 }
 
+// Exact 10-Service Canonical Sequence
+const SERVICE_ORDER = [
+  "false-ceilings",
+  "kitchens",
+  "wardrobes",
+  "living-rooms",
+  "crockery-units",
+  "pooja-units",
+  "office-interior",
+  "shop-interior",
+  "commercial-interior",
+  "civil-work"
+];
+
+function getServiceRank(id: string, name: string): number {
+  const s = (id + " " + name).toLowerCase();
+  if (s.includes("ceiling") || s.includes("false")) return 1;
+  if (s.includes("kitchen")) return 2;
+  if (s.includes("wardrobe") || s.includes("bedroom")) return 3;
+  if (s.includes("living") || s.includes("residential")) return 4;
+  if (s.includes("crockery") || s.includes("crochery")) return 5;
+  if (s.includes("pooja") || s.includes("mandir")) return 6;
+  if (s.includes("office")) return 7;
+  if (s.includes("shop") || s.includes("retail")) return 8;
+  if (s.includes("commercial")) return 9;
+  if (s.includes("civil") || s.includes("construction")) return 10;
+  return 99;
+}
+
 const DEFAULT_SERVICES: FooterServiceItem[] = [
+  { id: "false-ceilings", name: "False Ceiling" },
   { id: "kitchens", name: "Modular Kitchen" },
-  { id: "crochery-unit", name: "Crockery Units" },
   { id: "wardrobes", name: "Wardrobes" },
   { id: "living-rooms", name: "Living Rooms" },
+  { id: "crockery-units", name: "Crockery Units" },
   { id: "pooja-units", name: "Pooja Units" },
-  { id: "false-ceilings", name: "False Ceiling" },
+  { id: "office-interior", name: "Office Interior" },
+  { id: "shop-interior", name: "Shop Interior" },
+  { id: "commercial-interior", name: "Commercial Interior" },
   { id: "civil-work", name: "Civil Work" },
-  { id: "office-work", name: "Office Work" },
-  { id: "commercial-space", name: "Commercial Space" },
 ];
 
 export default function Footer() {
@@ -31,12 +61,12 @@ export default function Footer() {
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
-            setServices(
-              data.map((s: { id: string; name: string }) => ({
+            const mapped = data.map((s: { id: string; name: string }) => ({
                 id: s.id,
                 name: s.name,
-              }))
-            );
+              }));
+            mapped.sort((a: any, b: any) => getServiceRank(a.id, a.name) - getServiceRank(b.id, b.name));
+            setServices(mapped);
           }
         }
       } catch {
@@ -95,11 +125,11 @@ export default function Footer() {
           
           {/* Spaces That Label */}
           <div className="flex items-center gap-2 mb-2 select-none">
-            <span className="h-[1.5px] w-5 bg-[#C08A4E]/80" />
-            <span className="text-[10.5px] uppercase tracking-[0.25em] text-[#C08A4E] font-bold leading-none">
+            <span className="h-[1.5px] w-5 bg-[#D59318]" />
+            <span className="text-[10.5px] uppercase tracking-[0.25em] text-[#D59318] font-bold leading-none">
               Spaces That
             </span>
-            <span className="text-[#C08A4E] text-xs">✦</span>
+            <span className="text-[#D59318] text-xs">✦</span>
           </div>
 
           {/* Large Serif Heading */}
@@ -115,7 +145,7 @@ export default function Footer() {
 
           <a 
             href="#design-brief" 
-            className="group inline-flex items-center gap-2.5 mt-3.5 text-[11px] sm:text-xs font-bold tracking-[0.2em] text-[#C08A4E] hover:text-[#D59318] transition-colors border-b border-[#C08A4E] pb-0.5 uppercase"
+            className="group inline-flex items-center gap-2.5 mt-3.5 text-[11px] sm:text-xs font-bold tracking-[0.2em] text-[#D59318] hover:text-[#D59318] transition-colors border-b border-[#D59318] pb-0.5 uppercase"
           >
             <span>Let's create your space</span>
             <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
@@ -160,7 +190,7 @@ export default function Footer() {
 
               {/* Follow Us */}
               <div className="flex flex-col items-start gap-1 mt-3">
-                <h5 className="text-[13.5px] sm:text-[15px] uppercase tracking-[0.2em] text-[#C08A4E] font-bold flex items-center gap-2">
+                <h5 className="text-[13.5px] sm:text-[15px] uppercase tracking-[0.2em] text-[#D59318] font-bold flex items-center gap-2">
                   <span className="text-[#D59318] text-sm font-bold">✦</span>
                   <span>Follow Us</span>
                 </h5>
@@ -179,9 +209,22 @@ export default function Footer() {
                     </svg>
                   </a>
 
+                  {/* Facebook */}
+                  <a 
+                    href="https://www.facebook.com/share/1Eh6DiHS88/" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="w-7.5 h-7.5 rounded-full border border-neutral-400 bg-white/60 text-neutral-800 hover:text-white hover:bg-[#D59318] hover:border-[#D59318] flex items-center justify-center transition-all duration-300 active:scale-95 shadow-sm"
+                    aria-label="Facebook"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </a>
+
                   {/* Instagram */}
                   <a 
-                    href="#" 
+                    href="https://www.instagram.com/spark__interiors?utm_source=qr&mdxt=bGxlcXpreXpsaGVn" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="w-7.5 h-7.5 rounded-full border border-neutral-400 bg-white/60 text-neutral-800 hover:text-white hover:bg-[#D59318] hover:border-[#D59318] flex items-center justify-center transition-all duration-300 active:scale-95 shadow-sm"
@@ -192,22 +235,10 @@ export default function Footer() {
                     </svg>
                   </a>
 
-                  {/* LinkedIn */}
-                  <a 
-                    href="#" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="w-7.5 h-7.5 rounded-full border border-neutral-400 bg-white/60 text-neutral-800 hover:text-white hover:bg-[#D59318] hover:border-[#D59318] flex items-center justify-center transition-all duration-300 active:scale-95 shadow-sm"
-                    aria-label="LinkedIn"
-                  >
-                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M22.23 0H1.77C.8 0 0 .77 0 1.72v20.56C0 23.23.8 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.2 0 22.23 0zM7.12 20.45H3.56V9h3.56v11.45zM5.34 7.43c-1.14 0-2.06-.92-2.06-2.06 0-1.14.92-2.06 2.06-2.06 1.14 0 2.06.92 2.06 2.06 0 1.14-.92 2.06-2.06 2.06zM20.45 20.45h-3.56v-5.6c0-1.34-.03-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95v5.7H9.33V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29z"/>
-                    </svg>
-                  </a>
 
                   {/* Mail */}
                   <a 
-                    href="mailto:hello@sparkinteriors.com" 
+                    href="mailto:sparkinteriors2013@gmail.com" 
                     className="w-7.5 h-7.5 rounded-full border border-neutral-400 bg-white/60 text-neutral-800 hover:text-white hover:bg-[#D59318] hover:border-[#D59318] flex items-center justify-center transition-all duration-300 active:scale-95 shadow-sm"
                     aria-label="Mail"
                   >
@@ -222,14 +253,14 @@ export default function Footer() {
             {/* Column 2: Address */}
             <div className="flex flex-col items-start">
               <div className="flex flex-col items-start gap-1 mb-2">
-                <h5 className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#C08A4E] font-bold flex items-center gap-2">
+                <h5 className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#D59318] font-bold flex items-center gap-2">
                   <svg className="w-4.5 h-4.5 text-[#D59318] shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                   <span>Address</span>
                 </h5>
-                <div className="h-[2px] w-10 sm:w-12 bg-[#C08A4E]/70 mt-1" />
+                <div className="h-[2px] w-10 sm:w-12 bg-[#D59318]/70 mt-1" />
               </div>
               
               <address className="not-italic text-[13px] sm:text-[14px] text-neutral-900 font-semibold leading-relaxed mt-0.5">
@@ -242,13 +273,13 @@ export default function Footer() {
             {/* Column 3: Contact */}
             <div className="flex flex-col items-start">
               <div className="flex flex-col items-start gap-1 mb-2">
-                <h5 className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#C08A4E] font-bold flex items-center gap-2">
+                <h5 className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#D59318] font-bold flex items-center gap-2">
                   <svg className="w-4.5 h-4.5 text-[#D59318] shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                   <span>Contact</span>
                 </h5>
-                <div className="h-[2px] w-10 sm:w-12 bg-[#C08A4E]/70 mt-1" />
+                <div className="h-[2px] w-10 sm:w-12 bg-[#D59318]/70 mt-1" />
               </div>
               
               <div className="flex flex-col gap-1.5 mt-0.5 text-[13px] sm:text-[14px] text-neutral-900 font-semibold">
@@ -258,8 +289,8 @@ export default function Footer() {
                 <a href="tel:+917200080418" className="hover:text-[#D59318] transition-colors duration-300">
                   +91 72000 80418
                 </a>
-                <a href="mailto:hello@sparkinteriors.com" className="hover:text-[#D59318] transition-colors duration-300 break-all sm:break-normal">
-                  hello@sparkinteriors.com
+                <a href="mailto:sparkinteriors2013@gmail.com" className="hover:text-[#D59318] transition-colors duration-300 break-all sm:break-normal">
+                  sparkinteriors2013@gmail.com
                 </a>
               </div>
             </div>
@@ -267,7 +298,7 @@ export default function Footer() {
             {/* Column 4: Explore */}
             <div className="flex flex-col items-start">
               <div className="flex flex-col items-start gap-1 mb-2">
-                <h5 className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#C08A4E] font-bold flex items-center gap-2">
+                <h5 className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#D59318] font-bold flex items-center gap-2">
                   <svg className="w-4.5 h-4.5 text-[#D59318] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M2 22C2 22 10 18 14 14C18 10 22 2 22 2C22 2 14 6 10 10C6 14 2 22 2 22Z" />
                     <path d="M9 15C9 15 12 11 15 11" />
@@ -275,7 +306,7 @@ export default function Footer() {
                   </svg>
                   <span>Explore</span>
                 </h5>
-                <div className="h-[2px] w-10 sm:w-12 bg-[#C08A4E]/70 mt-1" />
+                <div className="h-[2px] w-10 sm:w-12 bg-[#D59318]/70 mt-1" />
               </div>
               
               <ul className="flex flex-col gap-1.5 text-[13px] sm:text-[14px] text-neutral-900 font-semibold leading-relaxed mt-0.5">
@@ -310,11 +341,11 @@ export default function Footer() {
             {/* Column 5: Quick Links */}
             <div className="flex flex-col items-start">
               <div className="flex flex-col items-start gap-1 mb-2">
-                <h5 className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#C08A4E] font-bold flex items-center gap-2">
+                <h5 className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#D59318] font-bold flex items-center gap-2">
                   <span className="text-[#D59318] text-sm font-bold">✦</span>
                   <span>Quick Links</span>
                 </h5>
-                <div className="h-[2px] w-10 sm:w-12 bg-[#C08A4E]/70 mt-1" />
+                <div className="h-[2px] w-10 sm:w-12 bg-[#D59318]/70 mt-1" />
               </div>
               
               <div className="grid grid-cols-2 gap-x-5 sm:gap-x-6 gap-y-1.5 text-[13px] sm:text-[14px] text-neutral-900 font-semibold leading-relaxed whitespace-nowrap w-full mt-0.5">
@@ -354,8 +385,7 @@ export default function Footer() {
             </div>
 
           </div>
-
-          {/* Bottom Bar: Compact Centered Copyright */}
+{/* Bottom Bar: Compact Centered Copyright */}
           <div className="border-t border-[#D5C2AD]/70 pt-2.5 mt-4 text-[11px] sm:text-[11.5px] uppercase tracking-[0.25em] text-neutral-900 font-bold flex items-center justify-center gap-1.5">
             <span>&copy; 2026</span>
             <a

@@ -269,39 +269,57 @@ const projectsData: Project[] = [
   },
   {
     id: "office-enivironment",
-    title: "Office enivironment",
-    category: "office-work",
-    categoryLabel: "Office Work",
+    title: "Executive Office Interior",
+    category: "office-interior",
+    categoryLabel: "Office Interior",
     image: "/uploads/1792062581250-753762403.png",
     location: "Guindy, Chennai",
     year: "2025",
     area: "4,500 sq.ft",
-    scope: "Modern Office Workspace",
+    scope: "Executive Office Interior",
     materials: ["Acoustic Panels", "Ergonomic Glass Partitions", "Warm Linear LED"],
     materialSamples: [
       { name: "Acoustic Flute", colorCode: "bg-[#ECEFF1]" },
       { name: "Matte Charcoal", colorCode: "bg-[#37474F]" },
       { name: "Warm Teak", colorCode: "bg-[#8B5A2B]" }
     ],
-    description: "We design and develop modern office spaces that combine functionality, comfort, and professional aesthetics."
+    description: "We design and develop modern corporate office spaces that combine functionality, comfort, and professional aesthetics."
+  },
+  {
+    id: "shop-interior-boutique",
+    title: "Luxury Boutique Shop Interior",
+    category: "shop-interior",
+    categoryLabel: "Shop Interior",
+    image: "/uploads/1792062649340-103344752.png",
+    location: "T. Nagar, Chennai",
+    year: "2025",
+    area: "1,850 sq.ft",
+    scope: "Retail Showroom & Shop Interior Fit-out",
+    materials: ["Fluted Brass Racks", "Ambient Spotlights", "Italian Statuario Marble"],
+    materialSamples: [
+      { name: "Fluted Brass", colorCode: "bg-[#D4AF37]" },
+      { name: "Statuario Marble", colorCode: "bg-[#F5F5F5]" },
+      { name: "Warm Oak Shelving", colorCode: "bg-[#C49A6C]" }
+    ],
+    description: "From boutique stores to retail showrooms, our focus is on customer engagement, smart product displays, and modern architectural retail design."
   },
   {
     id: "commercial-space",
-    title: "Commercial Space",
-    category: "commercial-space",
-    categoryLabel: "Commercial Space",
+    title: "Commercial Interior Complex",
+    category: "commercial-interior",
+    categoryLabel: "Commercial Interior",
     image: "/uploads/1792062692743-163638705.png",
     location: "Anna Nagar, Chennai",
     year: "2025",
-    area: "3,200 sq.ft",
-    scope: "Commercial & Retail Interior",
+    area: "6,200 sq.ft",
+    scope: "Turnkey Commercial Interior",
     materials: ["Structural Glass", "Textured Micro-Cement", "Brass Inlays"],
     materialSamples: [
       { name: "Micro Cement", colorCode: "bg-[#ECEFF1]" },
       { name: "Brushed Brass", colorCode: "bg-[#D4AF37]" },
       { name: "Smoked Glass", colorCode: "bg-[#424242]" }
     ],
-    description: "From retail outlets to business complexes, our focus is on quality construction, smart space planning, and modern architectural design that supports business growth."
+    description: "From retail outlets to corporate business complexes, we create impactful, functional spaces that support business growth."
   }
 ];
 
@@ -310,17 +328,32 @@ function normalizeCategory(cat: string | null): string {
   if (!cat) return "all";
   const c = cat.toLowerCase().trim();
   if (c === "all" || c.includes("collection")) return "all";
+  if (c.includes("ceiling") || c.includes("false")) return "false-ceilings";
   if (c.includes("kitchen")) return "kitchens";
   if (c.includes("wardrobe")) return "wardrobes";
-  if (c.includes("civil")) return "civil-work";
-  if (c.includes("office")) return "office-work";
-  if (c.includes("commercial")) return "commercial-space";
-  if (c.includes("crockery") || c.includes("crochery")) return "crochery-unit";
-  if (c.includes("pooja") || c.includes("mandir")) return "pooja-units";
   if (c.includes("living")) return "living-rooms";
-  if (c.includes("ceiling") || c.includes("false")) return "false-ceilings";
+  if (c.includes("crockery") || c.includes("crochery")) return "crockery-units";
+  if (c.includes("pooja") || c.includes("mandir")) return "pooja-units";
+  if (c.includes("office")) return "office-interior";
+  if (c.includes("shop") || c.includes("retail") || c.includes("store") || c.includes("boutique")) return "shop-interior";
+  if (c.includes("commercial")) return "commercial-interior";
+  if (c.includes("civil")) return "civil-work";
   return c;
 }
+
+const DEFAULT_SERVICE_CATEGORIES = [
+  { value: "all", label: "All Collections" },
+  { value: "false-ceilings", label: "False Ceiling" },
+  { value: "kitchens", label: "Modular Kitchen" },
+  { value: "wardrobes", label: "Wardrobes" },
+  { value: "living-rooms", label: "Living Rooms" },
+  { value: "crockery-units", label: "Crockery Units" },
+  { value: "pooja-units", label: "Pooja Units" },
+  { value: "office-interior", label: "Office Interior" },
+  { value: "shop-interior", label: "Shop Interior" },
+  { value: "commercial-interior", label: "Commercial Interior" },
+  { value: "civil-work", label: "Civil Work" }
+];
 
 function PortfolioContent() {
   const searchParams = useSearchParams();
@@ -328,18 +361,7 @@ function PortfolioContent() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projects, setProjects] = useState<Project[]>(projectsData);
-  const [categories, setCategories] = useState<{ value: string; label: string }[]>([
-    { value: "all", label: "All Collections" },
-    { value: "kitchens", label: "Modular Kitchens" },
-    { value: "civil-work", label: "Civil Work" },
-    { value: "office-work", label: "Office Work" },
-    { value: "commercial-space", label: "Commercial Space" },
-    { value: "crochery-unit", label: "Crockery Unit" },
-    { value: "pooja-units", label: "Pooja Units" },
-    { value: "living-rooms", label: "Living Rooms" },
-    { value: "false-ceilings", label: "False Ceilings" },
-    { value: "wardrobes", label: "Wardrobes" }
-  ]);
+  const [categories, setCategories] = useState<{ value: string; label: string }[]>(DEFAULT_SERVICE_CATEGORIES);
 
   // Sync category whenever search param changes (e.g. from footer links or URL navigation)
   useEffect(() => {
@@ -352,13 +374,112 @@ function PortfolioContent() {
     }
   }, [categoryParam]);
 
-  // Filter projects based on room type with normalization
+  // Robust category matching: matches normalized keys, exact strings, and dynamic service labels
   const filteredProjects = activeCategory === "all"
     ? projects
-    : projects.filter((p) => normalizeCategory(p.category) === normalizeCategory(activeCategory));
+    : projects.filter((p) => {
+        if (!p.category) return false;
+        const normActive = normalizeCategory(activeCategory);
+        const normProj = normalizeCategory(p.category);
+        if (normActive === normProj) return true;
 
-  // Initialize data, parse URL category param, and Close modal on Escape key press
+        const activeCatObj = categories.find((c) => c.value === activeCategory);
+        const activeLabel = activeCatObj ? activeCatObj.label.toLowerCase().trim() : "";
+        const rawProjCat = (p.category || "").toLowerCase().trim();
+        const rawProjLabel = (p.categoryLabel || "").toLowerCase().trim();
+
+        if (activeLabel && (rawProjCat === activeLabel || rawProjLabel === activeLabel)) return true;
+        if (activeLabel && (rawProjCat.includes(activeLabel) || activeLabel.includes(rawProjCat))) return true;
+        if (activeLabel && (rawProjLabel.includes(activeLabel) || activeLabel.includes(rawProjLabel))) return true;
+        return false;
+      });
+
+  // Dynamic loader: fetches services and projects, syncing project heading tabs directly with dashboard services
+  const loadServicesAndProjects = async () => {
+    try {
+      const cacheBust = Date.now();
+      const [servicesRes, projectsRes] = await Promise.all([
+        fetch(`http://localhost:5000/api/services?t=${cacheBust}`, { cache: "no-store" }).catch(() => null),
+        fetch(`http://localhost:5000/api/projects?t=${cacheBust}`, { cache: "no-store" }).catch(() => null)
+      ]);
+
+      let loadedProjects = projectsData;
+      if (projectsRes && projectsRes.ok) {
+        const pData = await projectsRes.json();
+        if (Array.isArray(pData) && pData.length > 0) {
+          loadedProjects = pData;
+        }
+      }
+      setProjects(loadedProjects);
+
+      // Canonical category list ordered exactly like the Project Dashboard
+      const dynamicCategories: { value: string; label: string }[] = DEFAULT_SERVICE_CATEGORIES.map((c) => ({ ...c }));
+      const existingValues = new Set(dynamicCategories.map((c) => normalizeCategory(c.value)));
+      const existingLabels = new Set(dynamicCategories.map((c) => c.label.toLowerCase().trim()));
+
+      // Sync and update with any live services from dashboard
+      if (servicesRes && servicesRes.ok) {
+        const sData = await servicesRes.json();
+        if (Array.isArray(sData)) {
+          sData.forEach((s: any) => {
+            const val = s.id || s.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-");
+            const norm = normalizeCategory(val);
+            const labelNorm = (s.name || "").toLowerCase().trim();
+
+            const existingIdx = dynamicCategories.findIndex(
+              (c) => normalizeCategory(c.value) === norm || c.label.toLowerCase().trim() === labelNorm
+            );
+            if (existingIdx !== -1) {
+              dynamicCategories[existingIdx].label = s.name;
+            } else if (!existingValues.has(norm) && !existingLabels.has(labelNorm)) {
+              dynamicCategories.push({
+                value: val,
+                label: s.name
+              });
+              existingValues.add(norm);
+              existingLabels.add(labelNorm);
+            }
+          });
+        }
+      }
+
+      // Append any extra unique categories present in projects that aren't already in the list
+      loadedProjects.forEach((p: any) => {
+        if (p.category && p.category !== "all") {
+          const norm = normalizeCategory(p.category);
+          const raw = (p.category || "").toLowerCase().trim();
+          const labelRaw = (p.categoryLabel || "").toLowerCase().trim();
+
+          const exists = dynamicCategories.some(
+            (c) => normalizeCategory(c.value) === norm || 
+                   c.label.toLowerCase().trim() === raw || 
+                   (labelRaw && c.label.toLowerCase().trim() === labelRaw)
+          );
+
+          if (!exists) {
+            const displayLabel = p.categoryLabel || p.category.replace(/-/g, " ").replace(/\b\w/g, (ch: string) => ch.toUpperCase());
+            dynamicCategories.push({
+              value: norm,
+              label: displayLabel
+            });
+            existingValues.add(norm);
+            existingLabels.add(raw);
+            if (labelRaw) existingLabels.add(labelRaw);
+          }
+        }
+      });
+
+      setCategories(dynamicCategories);
+    } catch {
+      setProjects(projectsData);
+      setCategories(DEFAULT_SERVICE_CATEGORIES);
+    }
+  };
+
+  // Real-time listener: triggers whenever services or projects are changed in Admin Dashboard
   useEffect(() => {
+    loadServicesAndProjects();
+
     const handleCustomCategory = (e: any) => {
       const cat = e.detail;
       if (cat) {
@@ -368,69 +489,44 @@ function PortfolioContent() {
       }
     };
 
+    const handleDataUpdate = () => {
+      loadServicesAndProjects();
+    };
+
     window.addEventListener("spark_category_change", handleCustomCategory);
+    window.addEventListener("spark_services_updated", handleDataUpdate);
+    window.addEventListener("spark_projects_updated", handleDataUpdate);
+    window.addEventListener("focus", handleDataUpdate);
 
-    // Fetch projects only for portfolio page
-    fetch("http://localhost:5000/api/projects")
-      .then((r) => r.json())
-      .then((projectsResult) => {
-        if (Array.isArray(projectsResult) && projectsResult.length > 0) {
-          setProjects(projectsResult);
-        } else {
-          setProjects(projectsData);
-        }
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "spark_services_updated" || e.key === "spark_projects_updated") {
+        loadServicesAndProjects();
+      }
+    };
+    window.addEventListener("storage", handleStorage);
 
-        const source = (Array.isArray(projectsResult) && projectsResult.length > 0)
-          ? projectsResult
-          : projectsData;
+    // Periodic sync every 3 seconds to guarantee updates across tabs/windows
+    const syncInterval = setInterval(loadServicesAndProjects, 3000);
 
-        // Canonical portfolio project categories
-        const CORE_CATEGORIES = [
-          { value: "all", label: "All Collections" },
-          { value: "kitchens", label: "Modular Kitchens" },
-          { value: "civil-work", label: "Civil Work" },
-          { value: "office-work", label: "Office Work" },
-          { value: "commercial-space", label: "Commercial Space" },
-          { value: "crochery-unit", label: "Crockery Unit" },
-          { value: "pooja-units", label: "Pooja Units" },
-          { value: "living-rooms", label: "Living Rooms" },
-          { value: "false-ceilings", label: "False Ceilings" },
-          { value: "wardrobes", label: "Wardrobes" }
-        ];
-
-        // Gather unique normalized categories present in projects
-        const projectCatSet = new Set(source.map((p: any) => normalizeCategory(p.category)));
-        const finalCategories = [...CORE_CATEGORIES];
-
-        // Append any extra unique project category from project database if not already present
-        projectCatSet.forEach((cat) => {
-          if (!finalCategories.some((c) => c.value === cat)) {
-            finalCategories.push({
-              value: cat,
-              label: cat.replace(/-/g, " ").replace(/\b\w/g, (ch: string) => ch.toUpperCase())
-            });
-          }
-        });
-
-        setCategories(finalCategories);
-      })
-      .catch(() => {
-        setProjects(projectsData);
-      });
-
-    // 3. Close modal on Escape key press
+    // Close modal on Escape key press
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelectedProject(null);
     };
     window.addEventListener("keydown", handleKeyDown);
+
     return () => {
+      clearInterval(syncInterval);
       window.removeEventListener("spark_category_change", handleCustomCategory);
+      window.removeEventListener("spark_services_updated", handleDataUpdate);
+      window.removeEventListener("spark_projects_updated", handleDataUpdate);
+      window.removeEventListener("focus", handleDataUpdate);
+      window.removeEventListener("storage", handleStorage);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#FAF6F0] text-[#252A24] font-sans selection:bg-[#D59318]/20 selection:text-[#D59318] flex flex-col justify-between overflow-x-hidden relative">
+    <main className="min-h-screen bg-[#FAF6F0] text-[#252A24] font-sans selection:bg-[#F3C33D]/20 selection:text-[#F3C33D] flex flex-col justify-between overflow-x-hidden relative">
       <Navbar />
 
       {/* =========================================================
@@ -438,15 +534,15 @@ function PortfolioContent() {
       ========================================================= */}
       <section className="max-w-[1440px] mx-auto px-6 sm:px-12 lg:px-16 pt-32 pb-4 text-center">
         <div className="flex items-center justify-center gap-4 mb-3">
-          <span className="w-12 h-[1px] bg-[#D59318]/50" />
-          <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#C27A32] font-semibold">
+          <span className="w-12 h-[1px] bg-[#F3C33D]/50" />
+          <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#F3C33D] font-semibold">
             ✦ CHOSEN PROJECTS ✦
           </span>
-          <span className="w-12 h-[1px] bg-[#D59318]/50" />
+          <span className="w-12 h-[1px] bg-[#F3C33D]/50" />
         </div>
 
         <h1 className="font-serif text-[38px] sm:text-[48px] lg:text-[56px] leading-tight text-[#252A24] font-normal tracking-tight">
-          Spatial Work & <span className="text-[#D59318] italic font-serif">Living Portfolios</span>
+          Spatial Work & <span className="text-[#F3C33D] italic font-serif">Living Portfolios</span>
         </h1>
 
         <p className="mt-5 text-neutral-800 text-base sm:text-[17.5px] leading-relaxed max-w-xl mx-auto font-light">
@@ -462,12 +558,12 @@ function PortfolioContent() {
                 setActiveCategory(cat.value);
               }}
               className={`relative py-1 text-xs uppercase tracking-[0.2em] font-semibold transition-colors duration-300 cursor-pointer ${
-                activeCategory === cat.value ? "text-[#D59318]" : "text-[#555B55] hover:text-[#D59318]"
+                activeCategory === cat.value ? "text-[#F3C33D]" : "text-[#555B55] hover:text-[#F3C33D]"
               }`}
             >
               {cat.label}
               {activeCategory === cat.value && (
-                <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#D59318] rounded-full" />
+                <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#F3C33D] rounded-full" />
               )}
             </button>
           ))}
@@ -503,14 +599,14 @@ function PortfolioContent() {
                 {/* Grid Metadata Footer */}
                 <div className="p-4 sm:p-5 flex flex-col justify-between border-t border-[#E1D3C1]/30 relative z-10 bg-white">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-[9.5px] uppercase tracking-[0.2em] text-[#D59318] font-bold">
+                    <span className="text-[9.5px] uppercase tracking-[0.2em] text-[#F3C33D] font-bold">
                       {project.categoryLabel}
                     </span>
-                    <span className="text-[9.5px] font-bold tracking-widest text-[#C27A32] uppercase group-hover:translate-x-1 transition-transform duration-300">
+                    <span className="text-[9.5px] font-bold tracking-widest text-[#F3C33D] uppercase group-hover:translate-x-1 transition-transform duration-300">
                       View Project →
                     </span>
                   </div>
-                  <h3 className="font-serif text-base text-[#252A24] font-normal group-hover:text-[#D59318] transition-colors duration-300 truncate">
+                  <h3 className="font-serif text-base text-[#252A24] font-normal group-hover:text-[#F3C33D] transition-colors duration-300 truncate">
                     {project.title}
                   </h3>
                 </div>
@@ -559,7 +655,7 @@ function PortfolioContent() {
               <span className="font-serif text-base sm:text-lg font-normal tracking-wide">
                 {selectedProject.title}
               </span>
-              <span className="text-[10px] uppercase tracking-[0.25em] text-[#D59318] font-bold bg-[#D59318]/15 border border-[#D59318]/30 px-3.5 py-1 rounded-full">
+              <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold bg-[#F3C33D]/15 border border-[#F3C33D]/30 px-3.5 py-1 rounded-full">
                 {selectedProject.categoryLabel}
               </span>
             </div>
@@ -579,7 +675,7 @@ function PortfolioContent() {
         </p>
         <Link
           href="/contact"
-          className="mt-8 inline-flex bg-[#D59318] hover:bg-[#B87D0C] text-white text-xs font-bold tracking-[0.2em] px-10 py-4 rounded-full shadow-lg transition-all duration-300 uppercase cursor-pointer"
+          className="mt-8 inline-flex bg-[#F3C33D] hover:bg-[#E5B22D] text-black text-xs font-bold tracking-[0.2em] px-10 py-4 rounded-full shadow-lg transition-all duration-300 uppercase cursor-pointer"
         >
           Start Your Project
         </Link>

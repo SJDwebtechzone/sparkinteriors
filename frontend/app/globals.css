@@ -5,7 +5,7 @@
   --font-serif: "Cormorant Garamond", serif;
   --font-sans: "Plus Jakarta Sans", sans-serif;
   --color-spark-gold: #F3C33D;
-  --color-spark-gold-dark: #D59318;
+  --color-spark-gold-dark: #F3C33D;
   --color-spark-black: #0E0E0E;
   --color-spark-charcoal: #1C1C1C;
   --color-spark-cream: #F9F6F0;
@@ -181,235 +181,62 @@ body {
   animation: hero-ambient-float 6s ease-in-out infinite;
 }
 
-/* ================================
-   NAVBAR (Luxury Midnight Petrol & Metallic Gold)
-================================ */
 
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  background: rgba(2, 26, 38, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(243, 195, 61, 0.16);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+/* Admin Workspace & Dashboard Font Enhancement */
+.admin-dashboard-root {
+  font-size: 1.05rem;
 }
 
-.navbar.navbar-scrolled {
-  background: rgba(2, 20, 30, 0.97);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(243, 195, 61, 0.28);
-  box-shadow: 0 14px 40px -8px rgba(0, 0, 0, 0.75);
+.admin-dashboard-root .text-\[9px\] {
+  font-size: 11px !important;
 }
 
-.navbar-container {
-  width: 100%;
-  max-width: 1400px;
-  height: 85px;
-  margin: 0 auto;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 0 50px;
+.admin-dashboard-root .text-\[10px\] {
+  font-size: 12px !important;
 }
 
-/* Logo */
-
-.navbar-logo {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
+.admin-dashboard-root .text-\[11px\] {
+  font-size: 13px !important;
 }
 
-.logo-image {
-  width: auto;
-  height: 72px;
-  max-height: 74px;
-  object-fit: contain;
+.admin-dashboard-root .text-\[12px\],
+.admin-dashboard-root .text-xs {
+  font-size: 0.84rem !important; /* ~13.5px */
+  line-height: 1.5 !important;
 }
 
-/* Desktop Links */
-
-.navbar-links {
-  display: flex;
-  align-items: center;
-  gap: 36px;
+.admin-dashboard-root .text-\[13px\] {
+  font-size: 14.5px !important;
 }
 
-.navbar-link {
-  position: relative;
-
-  color: #E2E8F0;
-  text-decoration: none;
-
-  font-size: 13.5px;
-  font-weight: 500;
-  letter-spacing: 0.6px;
-
-  transition:
-    color 0.3s ease,
-    transform 0.3s ease;
+.admin-dashboard-root .text-sm {
+  font-size: 0.96rem !important; /* ~15.4px */
+  line-height: 1.5 !important;
 }
 
-.navbar-link::after {
-  content: "";
-
-  position: absolute;
-  left: 0;
-  bottom: -6px;
-
-  width: 0;
-  height: 2px;
-
-  background: linear-gradient(90deg, #F3C33D, #D59318);
-  border-radius: 2px;
-
-  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.admin-dashboard-root .text-base {
+  font-size: 1.08rem !important; /* ~17.3px */
+  line-height: 1.55 !important;
 }
 
-.navbar-link:hover {
-  color: #F3C33D;
+.admin-dashboard-root .text-lg {
+  font-size: 1.22rem !important;
 }
 
-.navbar-link:hover::after {
-  width: 100%;
+.admin-dashboard-root .text-xl {
+  font-size: 1.35rem !important;
 }
 
-/* Quote Button */
-
-.quote-button {
-  padding: 12px 26px;
-
-  background: linear-gradient(135deg, #F3C33D 0%, #D59318 100%);
-  color: #021C28;
-
-  border-radius: 30px;
-
-  text-decoration: none;
-
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-
-  box-shadow: 0 4px 18px rgba(243, 195, 61, 0.32);
-
-  transition:
-    background 0.3s ease,
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+.admin-dashboard-root .text-2xl {
+  font-size: 1.65rem !important;
 }
 
-.quote-button:hover {
-  background: linear-gradient(135deg, #FFE66D 0%, #C9820E 100%);
-  transform: translateY(-2px);
-
-  box-shadow: 0 6px 24px rgba(243, 195, 61, 0.55);
+.admin-dashboard-root .text-3xl {
+  font-size: 2rem !important;
 }
 
-/* Mobile Button */
-
-.menu-button {
-  display: none;
-
-  border: 1px solid rgba(243, 195, 61, 0.3);
-  background: rgba(2, 34, 49, 0.6);
-  border-radius: 8px;
-  padding: 8px 14px;
-
-  color: #F3C33D;
-
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.menu-button:hover {
-  background: rgba(243, 195, 61, 0.15);
-  border-color: #F3C33D;
-}
-
-/* Mobile Menu */
-
-.mobile-menu {
-  display: none;
-}
-
-/* ================================
-   RESPONSIVE
-================================ */
-
-@media (max-width: 900px) {
-
-  .navbar-container {
-    height: 75px;
-    padding: 0 25px;
-  }
-
-  .navbar-links {
-    display: none;
-  }
-
-  .menu-button {
-    display: block;
-  }
-
-  .mobile-menu {
-    display: flex;
-
-    flex-direction: column;
-    gap: 20px;
-
-    padding: 28px 25px;
-
-    background: rgba(2, 24, 35, 0.98);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-
-    border-top: 1px solid rgba(243, 195, 61, 0.16);
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
-  }
-
-  .mobile-link {
-    color: #E2E8F0;
-    text-decoration: none;
-
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    transition: color 0.3s ease;
-  }
-
-  .mobile-link:hover {
-    color: #F3C33D;
-  }
-
-  .mobile-quote {
-    display: inline-block;
-
-    width: fit-content;
-
-    padding: 12px 24px;
-
-    background: linear-gradient(135deg, #F3C33D 0%, #D59318 100%);
-    color: #021C28;
-
-    border-radius: 25px;
-
-    text-decoration: none;
-
-    font-size: 13.5px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 18px rgba(243, 195, 61, 0.35);
-  }
+.admin-dashboard-root input,
+.admin-dashboard-root select,
+.admin-dashboard-root textarea {
+  font-size: 0.925rem !important;
 }

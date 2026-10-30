@@ -28,7 +28,7 @@ export default function AboutPage() {
     return () => clearInterval(timer);
   }, []);
   return (
-    <main className="min-h-screen bg-[#FAF6F0] text-neutral-900 font-sans selection:bg-[#D59318]/20 selection:text-[#D59318] overflow-x-hidden">
+    <main className="min-h-screen bg-[#FAF6F0] text-neutral-900 font-sans selection:bg-[#F3C33D]/20 selection:text-[#F3C33D] overflow-x-hidden">
       <Navbar />
 
       {/* =========================================================
@@ -41,8 +41,8 @@ export default function AboutPage() {
           {/* Left Column: Heading Copy */}
           <div className="lg:col-span-5 flex flex-col items-start relative z-10">
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-8 h-[1px] bg-[#D59318]" />
-              <span className="text-[11.5px] sm:text-xs uppercase tracking-[0.35em] text-[#D59318] font-bold">
+              <div className="w-8 h-[1px] bg-[#F3C33D]" />
+              <span className="text-[11.5px] sm:text-xs uppercase tracking-[0.35em] text-[#F3C33D] font-bold">
                 Established 2013
               </span>
             </div>
@@ -50,7 +50,7 @@ export default function AboutPage() {
             <h1 className="font-serif text-[48px] sm:text-[60px] lg:text-[70px] leading-[1.1] text-neutral-900 font-normal tracking-tight">
               Designing <br />
               spaces that <br />
-              <span className="text-[#D59318] italic font-serif font-medium">spark joy.</span>
+              <span className="text-[#F3C33D] italic font-serif font-medium">spark joy.</span>
             </h1>
             
             <p className="mt-8 text-neutral-800 text-base sm:text-[17.5px] leading-relaxed max-w-md font-light" style={{ textAlign: "justify" }}>
@@ -116,7 +116,7 @@ export default function AboutPage() {
                   key={idx}
                   onClick={() => setHeroIdx(idx)}
                   className={`h-[3px] rounded-full transition-all duration-[600ms] cursor-pointer ${
-                    idx === heroIdx ? "w-8 bg-[#D59318]" : "w-3 bg-[#E1D3C1]/50 hover:bg-[#D59318]/50"
+                    idx === heroIdx ? "w-8 bg-[#F3C33D]" : "w-3 bg-[#E1D3C1]/50 hover:bg-[#F3C33D]/50"
                   }`}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
@@ -140,16 +140,16 @@ export default function AboutPage() {
         {/* Centered Section Header */}
         <div className="w-full flex flex-col items-center mb-8 sm:mb-10">
           <div className="flex items-center justify-center gap-4 mb-4">
-            <span className="w-12 h-[1px] bg-[#D59318]/50" />
-            <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#C27A32] font-semibold flex items-center gap-2">
+            <span className="w-12 h-[1px] bg-[#F3C33D]/50" />
+            <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#F3C33D] font-semibold flex items-center gap-2">
               ✦ SPECIAL SERVICES ✦
             </span>
-            <span className="w-12 h-[1px] bg-[#D59318]/50" />
+            <span className="w-12 h-[1px] bg-[#F3C33D]/50" />
           </div>
           <h2 className="font-serif text-[32px] sm:text-[40px] leading-tight text-[#252A24] font-normal mt-4 text-center">
-            Curated for <span className="text-[#D59318] italic font-serif">sophisticated</span> living.
+            Curated for <span className="text-[#F3C33D] italic font-serif">sophisticated</span> living.
           </h2>
-          <div className="w-10 h-[1px] bg-[#D7B98F] mt-6" />
+          <div className="w-10 h-[1px] bg-[#F3C33D]/60 mt-6" />
         </div>
 
         {/* Content Box */}
@@ -175,19 +175,19 @@ export default function AboutPage() {
             {/* Core specialties checklist */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 w-full">
               <div className="flex flex-col">
-                <span className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#D59318] font-bold mb-2.5">Lighting Design</span>
+                <span className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#F3C33D] font-bold mb-2.5">Lighting Design</span>
                 <p className="text-base sm:text-[17.5px] leading-relaxed text-neutral-800 font-light" style={{ textAlign: "justify" }}>
                   Creating tailored lighting solutions to enhance ambiance, functionality, and architectural style in every space.
                 </p>
               </div>
               <div className="flex flex-col">
-                <span className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#D59318] font-bold mb-2.5">Custom Furniture</span>
+                <span className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#F3C33D] font-bold mb-2.5">Custom Furniture</span>
                 <p className="text-base sm:text-[17.5px] leading-relaxed text-neutral-800 font-light" style={{ textAlign: "justify" }}>
                   Designing unique and personalized pieces that perfectly complement your spatial layouts and fit your aesthetic.
                 </p>
               </div>
               <div className="flex flex-col">
-                <span className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#D59318] font-bold mb-2.5">Furniture Sourcing</span>
+                <span className="text-[14.5px] sm:text-[16px] uppercase tracking-[0.2em] text-[#F3C33D] font-bold mb-2.5">Furniture Sourcing</span>
                 <p className="text-base sm:text-[17.5px] leading-relaxed text-neutral-800 font-light" style={{ textAlign: "justify" }}>
                   Offering expert sourcing to select high-quality, signature pieces that elevate the overall theme.
                 </p>
@@ -230,7 +230,7 @@ export default function AboutPage() {
             <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center justify-center">
               <Link 
                 href="/contact"
-                className="inline-block bg-[#D59318] hover:bg-[#B87D0C] text-white text-[10px] sm:text-xs font-bold tracking-[0.25em] px-8 sm:px-10 py-4 rounded-full shadow-lg hover:shadow-xl active:scale-95 transition-all duration-300 uppercase cursor-pointer"
+                className="inline-block bg-[#F3C33D] hover:bg-[#E5B22D] text-black text-[10px] sm:text-xs font-bold tracking-[0.25em] px-8 sm:px-10 py-4 rounded-full shadow-lg hover:shadow-xl active:scale-95 transition-all duration-300 uppercase cursor-pointer"
               >
                 Book a Consultation
               </Link>
@@ -282,16 +282,16 @@ function AboutOurCompany() {
       {/* Centered Section Header */}
       <div className="w-full flex flex-col items-center mb-8 sm:mb-10">
         <div className="flex items-center justify-center gap-4 mb-4">
-          <span className="w-12 h-[1px] bg-[#D59318]/50" />
-          <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#C27A32] font-semibold flex items-center gap-2">
+          <span className="w-12 h-[1px] bg-[#F3C33D]/50" />
+          <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#F3C33D] font-semibold flex items-center gap-2">
             ✦ ABOUT US ✦
           </span>
-          <span className="w-12 h-[1px] bg-[#D59318]/50" />
+          <span className="w-12 h-[1px] bg-[#F3C33D]/50" />
         </div>
         <h2 className="font-serif text-[32px] sm:text-[40px] leading-tight text-[#252A24] font-normal mt-4 text-center">
           About Our Company
         </h2>
-        <div className="w-10 h-[1px] bg-[#D7B98F] mt-6" />
+        <div className="w-10 h-[1px] bg-[#F3C33D]/60 mt-6" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-20 items-start max-w-[1240px] mx-auto">
@@ -350,7 +350,7 @@ function AboutOurCompany() {
                 key={idx}
                 onClick={() => setCurrIdx(idx)}
                 className={`h-[3px] rounded-full transition-all duration-[600ms] cursor-pointer ${
-                  idx === currIdx ? "w-8 bg-[#D59318]" : "w-3 bg-[#E1D3C1]/50 hover:bg-[#D59318]/50"
+                  idx === currIdx ? "w-8 bg-[#F3C33D]" : "w-3 bg-[#E1D3C1]/50 hover:bg-[#F3C33D]/50"
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />
@@ -362,7 +362,7 @@ function AboutOurCompany() {
         {/* Right Column: Editorial Copy (7 Cols) */}
         <div className="md:col-span-7 flex flex-col items-start mt-6 md:mt-0">
           <p className="text-neutral-800 text-base sm:text-[17.5px] leading-relaxed font-light mb-6 text-justify">
-            Spark Interiors, we transform spaces with innovative design solutions that reflect your personality and style. Specializing in Modular Kitchens, Wardrobes, Living Rooms, and Pooja Units, we bring functionality and elegance to every corner of your home. Our expertise extends to creating inspiring and efficient environments for institutions, ensuring that each space we design is both beautiful and purposeful. With a passion for creativity and precision, Spark Interiors is your partner in crafting spaces that resonate with comfort and luxury.
+            Spark Interiors, we transform spaces with innovative design solutions that reflect your personality and style. Specializing in False Ceiling, Modular Kitchen, Wardrobes, Living Rooms, Crockery Units, Pooja Units, Office Interior, Shop Interior, Commercial Interior, and Civil Work, we bring functionality and elegance to every corner of your property. Our expertise extends to creating inspiring and efficient environments for residential and commercial clients, ensuring that each space we design is both beautiful and purposeful. With a passion for creativity and precision, Spark Interiors is your partner in crafting spaces that resonate with comfort and luxury.
           </p>
           
           <p className="text-neutral-800 text-base sm:text-[17.5px] leading-relaxed font-light mb-8 text-justify">
@@ -372,23 +372,23 @@ function AboutOurCompany() {
           {/* Value Checklist Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 border-t border-[#E1D3C1]/30 pt-6 w-full">
             <div className="flex items-center text-neutral-800 text-[14.5px] font-medium">
-              <span className="text-[#D59318] mr-2.5 font-bold text-lg">✓</span>
+              <span className="text-[#F3C33D] mr-2.5 font-bold text-lg">✓</span>
               Bespoke Interior Designs
             </div>
             <div className="flex items-center text-neutral-800 text-[14.5px] font-medium">
-              <span className="text-[#D59318] mr-2.5 font-bold text-lg">✓</span>
+              <span className="text-[#F3C33D] mr-2.5 font-bold text-lg">✓</span>
               Expert Craftsmanship
             </div>
             <div className="flex items-center text-neutral-800 text-[14.5px] font-medium">
-              <span className="text-[#D59318] mr-2.5 font-bold text-lg">✓</span>
+              <span className="text-[#F3C33D] mr-2.5 font-bold text-lg">✓</span>
               Complete Turnkey Execution
             </div>
             <div className="flex items-center text-neutral-800 text-[14.5px] font-medium">
-              <span className="text-[#D59318] mr-2.5 font-bold text-lg">✓</span>
+              <span className="text-[#F3C33D] mr-2.5 font-bold text-lg">✓</span>
               Premium Quality Materials
             </div>
             <div className="flex items-center text-neutral-800 text-[14.5px] font-medium">
-              <span className="text-[#D59318] mr-2.5 font-bold text-lg">✓</span>
+              <span className="text-[#F3C33D] mr-2.5 font-bold text-lg">✓</span>
               Transparent Collaboration
             </div>
           </div>

@@ -713,47 +713,6 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* =========================================================
-          SECTION 5: IMMERSIVE CALL TO ACTION (CTA BANNER CARD)
-      ========================================================= */}
-      <section className="py-16 px-6 sm:px-12 lg:px-16">
-        <div className="max-w-[1280px] mx-auto rounded-[32px] sm:rounded-[48px] overflow-hidden relative py-24 md:py-32 flex items-center justify-center text-center shadow-lg">
-          
-          {/* Background Visual Banner */}
-          <div className="absolute inset-0 z-0">
-            <Image
-              src="/services-cta.jpg"
-              alt="Ready to create your perfect space wide lounge visual"
-              fill
-              unoptimized
-              suppressHydrationWarning
-              className="object-cover object-center brightness-[0.78] contrast-[1.05]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/15 to-black/45 z-0 pointer-events-none" />
-          </div>
-
-          {/* Content Box */}
-          <div className="relative z-10 px-6 sm:px-12 max-w-2xl flex flex-col items-center">
-            <h2 className="font-serif text-[36px] sm:text-[48px] lg:text-[54px] leading-tight text-white font-normal drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
-              Ready to create your perfect space?
-            </h2>
-            
-            <p className="mt-4 text-[#FAF6F0] text-sm sm:text-base font-light tracking-wide drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]">
-              Let's bring your vision to life.
-            </p>
-            
-            <div className="mt-10">
-              <Link 
-                href="/contact"
-                className="inline-block bg-[#D59318] hover:bg-[#B87D0C] text-white text-[10px] sm:text-xs font-bold tracking-[0.25em] px-8 sm:px-10 py-4 rounded-full shadow-lg hover:shadow-xl active:scale-95 transition-all duration-300 uppercase cursor-pointer"
-              >
-                Start your project
-              </Link>
-            </div>
-          </div>
-
-        </div>
-      </section>
 
 
       <Footer />

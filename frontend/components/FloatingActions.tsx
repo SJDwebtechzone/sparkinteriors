@@ -58,7 +58,7 @@ export default function FloatingActions() {
         className="flex items-center justify-center cursor-pointer pointer-events-auto"
         aria-label="Call"
       >
-        <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-gradient-to-tr from-[#B87D0C] to-[#D59318] text-white shadow-[0_8px_25px_rgba(213, 147, 24,0.38)] flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 hover:shadow-[0_12px_32px_rgba(213, 147, 24,0.55)] border border-white/25">
+        <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-gradient-to-tr from-[#E5B22D] to-[#F3C33D] text-white shadow-[0_8px_25px_rgba(243,195,61,0.4)] flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 hover:shadow-[0_12px_32px_rgba(243,195,61,0.6)] border border-white/25">
           <Phone className="w-5.5 h-5.5 text-white" />
         </div>
       </a>

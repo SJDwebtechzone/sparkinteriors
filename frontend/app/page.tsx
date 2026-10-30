@@ -74,60 +74,82 @@ interface ServiceSummary {
   image: string;
 }
 
+// Canonical 10-Service Sequence
+export function getServiceRank(name: string): number {
+  const s = (name || "").toLowerCase();
+  if (s.includes("ceiling") || s.includes("false")) return 1;
+  if (s.includes("kitchen")) return 2;
+  if (s.includes("wardrobe") || s.includes("bedroom")) return 3;
+  if (s.includes("living") || s.includes("residential")) return 4;
+  if (s.includes("crockery") || s.includes("crochery")) return 5;
+  if (s.includes("pooja") || s.includes("mandir")) return 6;
+  if (s.includes("office")) return 7;
+  if (s.includes("shop") || s.includes("retail")) return 8;
+  if (s.includes("commercial")) return 9;
+  if (s.includes("civil") || s.includes("construction")) return 10;
+  return 99;
+}
+
 const serviceSummariesFallback: ServiceSummary[] = [
   {
     number: "01",
-    name: "Modular Kitchens",
+    name: "False Ceiling",
+    description: "Architectural false ceiling layouts with concealed warm LED cove illumination, acoustic refinement, and flush magnetic spotlights.",
+    image: "/about-living-curved-custom.jpg",
+  },
+  {
+    number: "02",
+    name: "Modular Kitchen",
     description: "Tailored modular kitchens blending ergonomic storage, soft-close hardware, and heat-resistant quartz surfaces for seamless culinary experiences.",
     image: "/home-kitchen-luxury.jpg",
   },
   {
-    number: "02",
+    number: "03",
     name: "Wardrobes",
     description: "Bespoke floor-to-ceiling walk-in and sliding wardrobe systems with fluted glass doors, smart sensor lighting, and custom organizers.",
     image: "/home-bedroom-luxury-wardrobe-green.jpg",
   },
   {
-    number: "03",
+    number: "04",
     name: "Living Rooms",
     description: "Welcoming and elegant living room layouts featuring custom wall paneling, acoustic integration, and bespoke architectural TV media consoles.",
     image: "/home-residential-luxury-tv.jpg",
   },
   {
-    number: "04",
+    number: "05",
+    name: "Crockery Units",
+    description: "Transform your dining space with a beautifully designed minimalist crockery unit that combines modern elegance with everyday functionality.",
+    image: "/uploads/1791866196623-701128140.png",
+  },
+  {
+    number: "06",
     name: "Pooja Units",
     description: "Sacred prayer alcoves designed with authentic Burma teak carving, backlit brass jali panels, and concealed bell alcoves.",
     image: "/home-pooja-unit.jpg",
   },
   {
-    number: "05",
-    name: "False Ceilings",
-    description: "Architectural false ceiling layouts with concealed warm LED cove illumination, acoustic refinement, and flush magnetic spotlights.",
-    image: "/about-living-curved-custom.jpg",
-  },
-  {
-    number: "06",
-    name: "Crockery Unit",
-    description: "Transform your dining space with a beautifully designed minimalist crockery unit that combines modern elegance with everyday functionality.",
-    image: "/uploads/1791866196623-701128140.png",
-  },
-  {
     number: "07",
-    name: "Civil Work",
-    description: "We build modern, durable, and elegant homes with a focus on quality craftsmanship, thoughtful design, and long-lasting structural strength.",
-    image: "/uploads/1792055409170-300976094.png",
-  },
-  {
-    number: "08",
-    name: "Office Work",
+    name: "Office Interior",
     description: "We design and develop modern office spaces that combine functionality, comfort, and professional aesthetics.",
     image: "/uploads/1792060886090-274025143.png",
   },
   {
-    number: "09",
-    name: "Commercial Space",
-    description: "From retail outlets to business complexes, our focus is on quality construction, smart space planning, and modern architectural design that supports business growth.",
+    number: "08",
+    name: "Shop Interior",
+    description: "Strategic retail and boutique interior designs with customer journey optimization, attractive display shelving, and impactful facade styling.",
     image: "/uploads/1792062649340-103344752.png",
+  },
+  {
+    number: "09",
+    name: "Commercial Interior",
+    description: "From retail outlets to corporate business complexes, we create impactful, functional spaces that support business growth.",
+    image: "/uploads/1792062649340-103344752.png",
+  },
+  {
+    number: "10",
+    name: "Civil Work",
+    description: "We build modern, durable, and elegant homes with a focus on quality craftsmanship, thoughtful design, and long-lasting structural strength.",
+    image: "/uploads/1792055409170-300976094.png",
   },
 ];
 
@@ -137,26 +159,7 @@ interface Testimonial {
   project: string;
 }
 
-const testimonialsFallback: Testimonial[] = [
-  {
-    quote:
-      "Spark spent more time listening than presenting. Six months in, our home still feels like it was always meant to look this way.",
-    name: "Ramya & Karthik",
-    project: "4BHK Villa, Chennai",
-  },
-  {
-    quote:
-      "They handled our pooja unit and the modular kitchen with the same care as the living room. Nothing felt like an afterthought.",
-    name: "Divya Menon",
-    project: "Apartment Renovation, Bengaluru",
-  },
-  {
-    quote:
-      "Our home finally looks like the sanctuary we always dreamed of. The craftsmanship and material choices held up beautifully.",
-    name: "Aravind & Family",
-    project: "Penthouse Residence, Coimbatore",
-  },
-];
+
 
 /* =========================================================
    MAIN EXPORT PAGE Component
@@ -164,7 +167,7 @@ const testimonialsFallback: Testimonial[] = [
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-[#FAF6F0] text-[#2F352F] font-sans antialiased selection:bg-[#D59318]/10 selection:text-[#D59318]">
+    <main className="min-h-screen bg-[#FAF6F0] text-[#2F352F] font-sans antialiased selection:bg-[#F3C33D]/10 selection:text-[#F3C33D]">
       <Navbar />
 
       {/* Untouched Hero Banner component */}
@@ -248,7 +251,7 @@ const statsData = [
     suffix: "+",
     label: "Years of Experience",
     icon: (
-      <svg className="w-6 h-6 text-[#D59318]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg className="w-6 h-6 text-[#F3C33D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="8" r="6" />
         <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
       </svg>
@@ -259,7 +262,7 @@ const statsData = [
     suffix: "+",
     label: "Projects Completed",
     icon: (
-      <svg className="w-6 h-6 text-[#D59318]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg className="w-6 h-6 text-[#F3C33D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
         <path d="M14 2v4a2 2 0 0 0 2 2h4" />
         <path d="M10 9H8" />
@@ -274,7 +277,7 @@ const statsData = [
     label: "Happy Clients",
     formatter: (v: number) => v >= 1000 ? (v / 1000).toFixed(1) + "K" : String(v),
     icon: (
-      <svg className="w-6 h-6 text-[#D59318]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg className="w-6 h-6 text-[#F3C33D]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
         <circle cx="9" cy="7" r="4" />
         <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
@@ -337,18 +340,18 @@ function PhilosophyStrip() {
       {/* Centered Header (Creative Domains Style) */}
       <div className="flex flex-col items-center justify-center text-center mb-8 w-full">
         <div className="flex items-center gap-4 mb-4">
-          <div className="h-[1.5px] w-8 sm:w-16 bg-[#D59318]" />
-          <span className="text-[#D59318] text-[11px] sm:text-xs">✦</span>
-          <span className="text-[12px] sm:text-[13.5px] uppercase tracking-[0.3em] text-[#C08A4E] font-bold">
+          <div className="h-[1.5px] w-8 sm:w-16 bg-[#F3C33D]" />
+          <span className="text-[#F3C33D] text-[11px] sm:text-xs">✦</span>
+          <span className="text-[12px] sm:text-[13.5px] uppercase tracking-[0.3em] text-[#F3C33D] font-bold">
             Our Vision
           </span>
-          <span className="text-[#D59318] text-[11px] sm:text-xs">✦</span>
-          <div className="h-[1.5px] w-8 sm:w-16 bg-[#D59318]" />
+          <span className="text-[#F3C33D] text-[11px] sm:text-xs">✦</span>
+          <div className="h-[1.5px] w-8 sm:w-16 bg-[#F3C33D]" />
         </div>
         <h2 className="font-serif text-[36px] sm:text-[46px] lg:text-[50px] leading-[1.15] text-neutral-900 font-normal tracking-tight max-w-4xl">
-          We believe a home should slow down to the <span className="text-[#D59318] italic font-serif font-medium">pace of the people</span> who live in it.
+          We believe a home should slow down to the <span className="text-[#F3C33D] italic font-serif font-medium">pace of the people</span> who live in it.
         </h2>
-        <div className="w-12 h-[1.5px] bg-[#D59318] mt-6" />
+        <div className="w-12 h-[1.5px] bg-[#F3C33D] mt-6" />
       </div>
 
       {/* 3-Column Top Grid */}
@@ -364,7 +367,7 @@ function PhilosophyStrip() {
           {/* Outline capsule button */}
           <Link
             href="/about"
-            className="mt-8 inline-flex items-center justify-center px-6 py-3 border border-[#D59318]/60 text-[#D59318] rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#D59318] hover:text-white transition-all duration-300"
+            className="mt-8 inline-flex items-center justify-center px-6 py-3 border border-[#F3C33D]/60 text-[#F3C33D] rounded-full text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-[#F3C33D] hover:text-black transition-all duration-300"
           >
             Discover Our Story
             <span className="ml-2">→</span>
@@ -376,25 +379,25 @@ function PhilosophyStrip() {
           
           {/* SVG Vertical Curved Wave Connector (Hidden on mobile/tablet) */}
           <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-8 pointer-events-none">
-            <svg className="w-full h-full text-[#D59318]" viewBox="0 0 40 380" fill="none">
+            <svg className="w-full h-full text-[#F3C33D]" viewBox="0 0 40 380" fill="none">
               {/* Wavy line path */}
               <path
                 d="M 30,20 C 10,80 10,140 30,190 C 10,240 10,300 30,360"
-                stroke="#D59318"
+                stroke="#F3C33D"
                 strokeWidth="1"
                 fill="none"
                 opacity="0.35"
               />
               
               {/* Inactive anchor dots */}
-              <circle cx="30" cy="20" r="3" fill="#FAF6F0" stroke="#D59318" strokeWidth="1.2" />
-              <circle cx="30" cy="190" r="3" fill="#FAF6F0" stroke="#D59318" strokeWidth="1.2" />
-              <circle cx="30" cy="360" r="3" fill="#FAF6F0" stroke="#D59318" strokeWidth="1.2" />
+              <circle cx="30" cy="20" r="3" fill="#FAF6F0" stroke="#F3C33D" strokeWidth="1.2" />
+              <circle cx="30" cy="190" r="3" fill="#FAF6F0" stroke="#F3C33D" strokeWidth="1.2" />
+              <circle cx="30" cy="360" r="3" fill="#FAF6F0" stroke="#F3C33D" strokeWidth="1.2" />
 
               {/* Active pulsing dot */}
-              {activeIndex === 0 && <circle cx="30" cy="20" r="5.5" fill="#D59318" className="animate-pulse" />}
-              {activeIndex === 1 && <circle cx="30" cy="190" r="5.5" fill="#D59318" className="animate-pulse" />}
-              {activeIndex === 2 && <circle cx="30" cy="360" r="5.5" fill="#D59318" className="animate-pulse" />}
+              {activeIndex === 0 && <circle cx="30" cy="20" r="5.5" fill="#F3C33D" className="animate-pulse" />}
+              {activeIndex === 1 && <circle cx="30" cy="190" r="5.5" fill="#F3C33D" className="animate-pulse" />}
+              {activeIndex === 2 && <circle cx="30" cy="360" r="5.5" fill="#F3C33D" className="animate-pulse" />}
             </svg>
           </div>
 
@@ -405,7 +408,7 @@ function PhilosophyStrip() {
               onMouseEnter={() => handleThumbnailHover(idx)}
               onMouseLeave={handleMouseLeave}
               className={`relative flex-1 lg:flex-none aspect-[1.3/1] lg:w-[125px] lg:h-[92px] rounded-[16px] overflow-hidden border-2 cursor-pointer transition-all duration-500 ease-out ${
-                activeIndex === idx ? "border-[#D59318] scale-[1.06] shadow-md z-10" : "border-transparent opacity-85 hover:opacity-100"
+                activeIndex === idx ? "border-[#F3C33D] scale-[1.06] shadow-md z-10" : "border-transparent opacity-85 hover:opacity-100"
               }`}
             >
               <Image
@@ -448,23 +451,23 @@ function PhilosophyStrip() {
       </div>
 
       {/* Bottom Ledger: 3 Icon-based Stats (Enhanced Highlighted View) */}
-      <div className="mt-8 border-2 border-[#D59318]/35 rounded-[32px] bg-gradient-to-br from-[#FAF7F2] via-[#FAF7F2] to-[#D59318]/5 py-10 px-6 sm:px-12 w-full grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 items-center shadow-[0_16px_48px_-12px_rgba(213, 147, 24,0.12)]">
+      <div className="mt-8 border-2 border-[#F3C33D]/35 rounded-[32px] bg-gradient-to-br from-[#FAF7F2] via-[#FAF7F2] to-[#F3C33D]/5 py-10 px-6 sm:px-12 w-full grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 items-center shadow-[0_16px_48px_-12px_rgba(243,195,61,0.15)]">
         {statsData.map((stat, idx) => (
           <div 
             key={idx} 
             className="flex items-center gap-5 md:gap-6 px-6 sm:px-12 md:px-8 lg:px-12 border-[#E1D3C1]/60 last:border-0 md:border-r"
           >
             {/* Architectural Highlighted Icon Frame */}
-            <div className="flex-shrink-0 w-13 h-13 rounded-[16px] border border-[#D59318]/30 bg-[#FAF7F2] flex items-center justify-center shadow-[0_4px_12px_-2px_rgba(213, 147, 24,0.06)]">
+            <div className="flex-shrink-0 w-13 h-13 rounded-[16px] border border-[#F3C33D]/30 bg-[#FAF7F2] flex items-center justify-center shadow-[0_4px_12px_-2px_rgba(243,195,61,0.08)]">
               {stat.icon}
             </div>
             {/* Stat Numbers and Details */}
             <div className="flex flex-col">
               <span className="font-serif text-3xl sm:text-4xl text-neutral-900 font-normal leading-none mb-1.5">
                 <AnimatedCounter target={stat.value} formatter={stat.formatter} />
-                <span className="text-[#D59318] font-bold ml-1">{stat.suffix}</span>
+                <span className="text-[#F3C33D] font-bold ml-1">{stat.suffix}</span>
               </span>
-              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-[#D59318] font-extrabold leading-tight">
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-[#F3C33D] font-extrabold leading-tight">
                 {stat.label}
               </span>
             </div>
@@ -481,7 +484,9 @@ function PhilosophyStrip() {
 ========================================================= */
 
 const whyChooseUsImages = [
-  { src: "/about-us-img.jpg", alt: "Bespoke stone courtyard design with water feature" },
+  { src: "/about-us-img.jpg", alt: "Spark Interiors bespoke modular kitchen with fluted glass cabinetry and rolling shutter" },
+  { src: "/why-choose-wardrobe-vanity.jpg", alt: "Spark Interiors modern sage and navy wardrobe with integrated vanity mirror" },
+  { src: "/why-choose-kitchen-island.jpg", alt: "Spark Interiors contemporary modular kitchen with fluted breakfast bar and warm lighting" },
   { src: "/home-tv-unit-grey-custom.jpg", alt: "Modern custom TV console with marble back panel and grey fluting" },
   { src: "/home-pooja-unit.jpg", alt: "Luxury modular backlit jaali Pooja unit" }
 ];
@@ -517,18 +522,18 @@ function WhyChooseUs() {
       {/* Centered Header (Creative Domains Style) */}
       <div className="flex flex-col items-center justify-center text-center mb-8 w-full">
         <div className="flex items-center gap-4 mb-4">
-          <div className="h-[1.5px] w-8 sm:w-16 bg-[#D59318]" />
-          <span className="text-[#D59318] text-[11px] sm:text-xs">✦</span>
-          <span className="text-[12px] sm:text-[13.5px] uppercase tracking-[0.3em] text-[#C08A4E] font-bold">
+          <div className="h-[1.5px] w-8 sm:w-16 bg-[#F3C33D]" />
+          <span className="text-[#F3C33D] text-[11px] sm:text-xs">✦</span>
+          <span className="text-[12px] sm:text-[13.5px] uppercase tracking-[0.3em] text-[#F3C33D] font-bold">
             The Spark Difference
           </span>
-          <span className="text-[#D59318] text-[11px] sm:text-xs">✦</span>
-          <div className="h-[1.5px] w-8 sm:w-16 bg-[#D59318]" />
+          <span className="text-[#F3C33D] text-[11px] sm:text-xs">✦</span>
+          <div className="h-[1.5px] w-8 sm:w-16 bg-[#F3C33D]" />
         </div>
         <h2 className="font-serif text-[36px] sm:text-[44px] leading-[1.15] text-neutral-900 font-normal tracking-tight max-w-4xl">
-          We will help you decide why you must <span className="text-[#D59318] italic font-serif font-medium">choose us.</span>
+          We will help you decide why you must <span className="text-[#F3C33D] italic font-serif font-medium">choose us.</span>
         </h2>
-        <div className="w-12 h-[1.5px] bg-[#D59318] mt-6" />
+        <div className="w-12 h-[1.5px] bg-[#F3C33D] mt-6" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
@@ -544,13 +549,13 @@ function WhyChooseUs() {
                 className="group/item relative flex items-start gap-5 p-5 rounded-[24px] border border-transparent hover:border-[#E1D3C1]/50 hover:bg-[#FAF7F2] hover:shadow-md transition-all duration-500 ease-out"
               >
                 {/* Architectural Target Marker */}
-                <div className="flex-shrink-0 w-6 h-6 rounded-full border border-[#D59318]/30 flex items-center justify-center bg-white mt-1 group-hover/item:border-[#D59318] transition-colors duration-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#D59318]" />
+                <div className="flex-shrink-0 w-6 h-6 rounded-full border border-[#F3C33D]/30 flex items-center justify-center bg-white mt-1 group-hover/item:border-[#F3C33D] transition-colors duration-300">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#F3C33D]" />
                 </div>
                 
                 {/* Description */}
                 <div>
-                  <h4 className="font-serif text-xl sm:text-[22px] text-[#D59318] font-normal mb-2 transition-colors duration-300">
+                  <h4 className="font-serif text-xl sm:text-[22px] text-[#F3C33D] font-normal mb-2 transition-colors duration-300">
                     {pt.title}
                   </h4>
                   <p className="text-neutral-800 text-base sm:text-[17.5px] leading-relaxed font-light text-justify">
@@ -566,9 +571,9 @@ function WhyChooseUs() {
         {/* Right Column: Premium Framed Asymmetric Image Slideshow (7 Cols) */}
         <div className="lg:col-span-7 relative w-full aspect-[4/3] transition-all duration-700 ease-out hover:-translate-y-2 group">
           {/* Double-layer architectural backing shadow frame */}
-          <div className="absolute inset-0 border border-[#D59318]/15 rounded-tr-[140px] rounded-bl-[140px] rounded-tl-[32px] rounded-br-[32px] translate-x-2.5 translate-y-2.5 bg-[#D59318]/5 transition-all duration-700 ease-out group-hover:translate-x-0 group-hover:translate-y-0 -z-10" />
+          <div className="absolute inset-0 border border-[#F3C33D]/15 rounded-tr-[140px] rounded-bl-[140px] rounded-tl-[32px] rounded-br-[32px] translate-x-2.5 translate-y-2.5 bg-[#F3C33D]/5 transition-all duration-700 ease-out group-hover:translate-x-0 group-hover:translate-y-0 -z-10" />
           
-          <div className="w-full h-full rounded-tr-[140px] rounded-bl-[140px] rounded-tl-[32px] rounded-br-[32px] overflow-hidden border border-[#E1D3C1]/50 bg-white p-3.5 shadow-2xl transition-all duration-700 ease-out group-hover:shadow-[0_25px_60px_-15px_rgba(213, 147, 24,0.15)] relative">
+          <div className="w-full h-full rounded-tr-[140px] rounded-bl-[140px] rounded-tl-[32px] rounded-br-[32px] overflow-hidden border border-[#E1D3C1]/50 bg-white p-3.5 shadow-2xl transition-all duration-700 ease-out group-hover:shadow-[0_25px_60px_-15px_rgba(243,195,61,0.15)] relative">
             <div className="relative w-full h-full rounded-tr-[128px] rounded-bl-[128px] rounded-tl-[22px] rounded-br-[22px] overflow-hidden bg-neutral-100">
               
               {whyChooseUsImages.map((img, idx) => (
@@ -600,9 +605,9 @@ function WhyChooseUs() {
                   <button
                     key={idx}
                     onClick={() => setCurrentImgIdx(idx)}
-                    className={`w-2.5 h-2.5 rounded-full transition-all duration-500 border border-[#D59318]/50 ${
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-500 border border-[#F3C33D]/50 ${
                       idx === currentImgIdx 
-                        ? "bg-[#D59318] scale-110 shadow-sm" 
+                        ? "bg-[#F3C33D] scale-110 shadow-sm" 
                         : "bg-white/80 hover:bg-white"
                     }`}
                     aria-label={`Go to slide ${idx + 1}`}
@@ -635,18 +640,18 @@ function FeaturedWork() {
         {/* Centered Header (Creative Domains Style) */}
         <div className="flex flex-col items-center justify-center text-center mb-8 w-full">
           <div className="flex items-center gap-4 mb-4">
-            <div className="h-[1.5px] w-8 sm:w-16 bg-[#D59318]" />
-            <span className="text-[#D59318] text-[11px] sm:text-xs">✦</span>
-            <span className="text-[12px] sm:text-[13.5px] uppercase tracking-[0.3em] text-[#C08A4E] font-bold">
+            <div className="h-[1.5px] w-8 sm:w-16 bg-[#F3C33D]" />
+            <span className="text-[#F3C33D] text-[11px] sm:text-xs">✦</span>
+            <span className="text-[12px] sm:text-[13.5px] uppercase tracking-[0.3em] text-[#F3C33D] font-bold">
               Selected Portfolios
             </span>
-            <span className="text-[#D59318] text-[11px] sm:text-xs">✦</span>
-            <div className="h-[1.5px] w-8 sm:w-16 bg-[#D59318]" />
+            <span className="text-[#F3C33D] text-[11px] sm:text-xs">✦</span>
+            <div className="h-[1.5px] w-8 sm:w-16 bg-[#F3C33D]" />
           </div>
           <h2 className="font-serif text-[36px] sm:text-[46px] leading-[1.15] text-neutral-900 font-normal max-w-4xl">
-            A closer look <span className="italic text-[#D59318] font-serif font-medium">at the craftsmanship.</span>
+            A closer look <span className="italic text-[#F3C33D] font-serif font-medium">at the craftsmanship.</span>
           </h2>
-          <div className="w-12 h-[1.5px] bg-[#D59318] mt-6" />
+          <div className="w-12 h-[1.5px] bg-[#F3C33D] mt-6" />
         </div>
 
         {/* Filmstrip Accordion Row */}
@@ -682,7 +687,7 @@ function FeaturedWork() {
                 <div className="absolute inset-0 p-6 flex flex-col justify-end items-start z-20">
                   
                   {/* Category Eyebrow */}
-                  <span className="text-[#D59318] text-[9.5px] uppercase tracking-[0.25em] font-bold mb-1.5 leading-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+                  <span className="text-[#F3C33D] text-[9.5px] uppercase tracking-[0.25em] font-bold mb-1.5 leading-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
                     {p.category}
                   </span>
 
@@ -700,7 +705,7 @@ function FeaturedWork() {
                     {/* Specs text details */}
                     <div className="flex flex-col gap-1.5 border-t border-white/25 pt-2.5 mt-1">
                       <span className="text-white/90 text-xs font-light drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
-                        Location: <span className="font-medium text-[#D59318]">{p.location}</span>
+                        Location: <span className="font-medium text-[#F3C33D]">{p.location}</span>
                       </span>
                       <span className="text-white text-[10px] sm:text-[10.5px] font-bold tracking-wider uppercase bg-black/40 backdrop-blur-sm rounded-full px-3 py-1 mt-1 border border-white/20 inline-block w-fit">
                         {p.spec}
@@ -710,7 +715,7 @@ function FeaturedWork() {
                     {/* Quick Link Button */}
                     <Link
                       href="/portfolio"
-                      className="mt-4 inline-flex items-center gap-2 text-[9px] uppercase tracking-[0.22em] text-[#D59318] font-bold hover:text-white transition-colors"
+                      className="mt-4 inline-flex items-center gap-2 text-[9px] uppercase tracking-[0.22em] text-[#F3C33D] font-bold hover:text-white transition-colors"
                     >
                       EXPLORE PROJECT <span className="text-xs">→</span>
                     </Link>
@@ -727,13 +732,13 @@ function FeaturedWork() {
         <div className="mt-10 flex justify-center">
           <Link
             href="/portfolio"
-            className="group relative inline-flex items-center gap-4 text-xs font-bold tracking-[0.25em] text-[#D59318] pb-1.5 uppercase cursor-pointer"
+            className="group relative inline-flex items-center gap-4 text-xs font-bold tracking-[0.25em] text-[#F3C33D] pb-1.5 uppercase cursor-pointer"
           >
             <span>View full project index</span>
             <span className="transform group-hover:translate-x-1.5 transition-transform duration-300">
               →
             </span>
-            <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#D59318] group-hover:w-full transition-all duration-300" />
+            <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#F3C33D] group-hover:w-full transition-all duration-300" />
           </Link>
         </div>
 
@@ -837,6 +842,16 @@ export function getServiceTheme(name: string): ServiceTheme {
     };
   }
 
+  // Shop Interior - Vibrant Amber Gold
+  if (n.includes("shop") || n.includes("retail") || n.includes("boutique")) {
+    return {
+      activeBadge: "bg-gradient-to-br from-[#F59E0B] to-[#D97706] text-white shadow-md shadow-[#F59E0B]/30 border-transparent scale-105",
+      inactiveBadge: "bg-[#F59E0B]/12 text-[#D97706] border-[#F59E0B]/35 group-hover:bg-[#F59E0B]/22 group-hover:border-[#F59E0B]/60 group-hover:scale-105",
+      activeText: "text-[#D97706]",
+      hoverText: "group-hover:text-[#D97706]"
+    };
+  }
+
   // Crockery Unit - Warm Cinnamon Bronze
   if (n.includes("crockery") || n.includes("crochery")) {
     return {
@@ -847,8 +862,8 @@ export function getServiceTheme(name: string): ServiceTheme {
     };
   }
 
-  // Office Work / Commercial - Executive Navy / Cobalt
-  if (n.includes("office") || n.includes("commercial") || n.includes("work")) {
+  // 7. Office Interior - Executive Navy / Cobalt
+  if (n.includes("office")) {
     return {
       activeBadge: "bg-gradient-to-br from-[#2563EB] to-[#1E3A8A] text-white shadow-md shadow-[#2563EB]/30 border-transparent scale-105",
       inactiveBadge: "bg-[#2563EB]/12 text-[#1D4ED8] border-[#2563EB]/35 group-hover:bg-[#2563EB]/22 group-hover:border-[#2563EB]/60 group-hover:scale-105",
@@ -857,12 +872,32 @@ export function getServiceTheme(name: string): ServiceTheme {
     };
   }
 
+  // 8. Shop Interior - Vibrant Amber Gold
+  if (n.includes("shop") || n.includes("retail") || n.includes("store") || n.includes("boutique")) {
+    return {
+      activeBadge: "bg-gradient-to-br from-[#D97706] to-[#B45309] text-white shadow-md shadow-[#D97706]/30 border-transparent scale-105",
+      inactiveBadge: "bg-[#D97706]/12 text-[#D97706] border-[#D97706]/35 group-hover:bg-[#D97706]/22 group-hover:border-[#D97706]/60 group-hover:scale-105",
+      activeText: "text-[#D97706]",
+      hoverText: "group-hover:text-[#D97706]"
+    };
+  }
+
+  // 9. Commercial Interior - Modern Deep Teal
+  if (n.includes("commercial")) {
+    return {
+      activeBadge: "bg-gradient-to-br from-[#0D9488] to-[#115E59] text-white shadow-md shadow-[#0D9488]/30 border-transparent scale-105",
+      inactiveBadge: "bg-[#0D9488]/12 text-[#0F766E] border-[#0D9488]/35 group-hover:bg-[#0D9488]/22 group-hover:border-[#0D9488]/60 group-hover:scale-105",
+      activeText: "text-[#0F766E]",
+      hoverText: "group-hover:text-[#0F766E]"
+    };
+  }
+
   // Fallback - Warm Luxury Gold
   return {
-    activeBadge: "bg-gradient-to-br from-[#D59318] to-[#C08A4E] text-white shadow-md shadow-[#D59318]/30 border-transparent scale-105",
-    inactiveBadge: "bg-[#D59318]/12 text-[#D59318] border-[#D59318]/35 group-hover:bg-[#D59318]/22 group-hover:border-[#D59318]/60 group-hover:scale-105",
-    activeText: "text-[#D59318]",
-    hoverText: "group-hover:text-[#D59318]"
+    activeBadge: "bg-gradient-to-br from-[#F3C33D] to-[#E5B22D] text-black shadow-md shadow-[#F3C33D]/30 border-transparent scale-105",
+    inactiveBadge: "bg-[#F3C33D]/12 text-[#F3C33D] border-[#F3C33D]/35 group-hover:bg-[#F3C33D]/22 group-hover:border-[#F3C33D]/60 group-hover:scale-105",
+    activeText: "text-[#F3C33D]",
+    hoverText: "group-hover:text-[#F3C33D]"
   };
 }
 
@@ -953,12 +988,33 @@ function getServiceIcon(name: string) {
     );
   }
 
-  // 8. Office Work / Commercial: Modern Architectural Workstation Desk & Monitor
-  if (n.includes("office") || n.includes("commercial") || n.includes("work")) {
+  // 7. Office Interior: Workstation & Monitor
+  if (n.includes("office")) {
     return (
       <svg className="w-5.5 h-5.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="5" y="4" width="14" height="10" rx="1.5" fill="currentColor" fillOpacity="0.15" />
         <path d="M9 14v4M15 14v4M6 18h12M2 20h20" />
+      </svg>
+    );
+  }
+
+  // 8. Shop Interior: Retail Storefront & Display
+  if (n.includes("shop") || n.includes("retail") || n.includes("store") || n.includes("boutique")) {
+    return (
+      <svg className="w-5.5 h-5.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" fill="currentColor" fillOpacity="0.15" />
+        <path d="M3 6h18" />
+        <path d="M16 10a4 4 0 0 1-8 0" />
+      </svg>
+    );
+  }
+
+  // 9. Commercial Interior: Commercial Architecture & Complex
+  if (n.includes("commercial")) {
+    return (
+      <svg className="w-5.5 h-5.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" fill="currentColor" fillOpacity="0.15" />
+        <path d="M3 9h18M9 21V9M15 21V9" />
       </svg>
     );
   }
@@ -1041,7 +1097,8 @@ function ServicesStrip() {
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const formatted = data.map((item, idx) => ({
+          const sorted = [...data].sort((a, b) => getServiceRank(a.name || a.id) - getServiceRank(b.name || b.id));
+          const formatted = sorted.map((item, idx) => ({
             ...item,
             number: String(idx + 1).padStart(2, "0")
           }));
@@ -1082,7 +1139,6 @@ function ServicesStrip() {
   if (list.length === 0) {
     return null;
   }
-
   const currentIdx = Math.min(activeIdx, list.length - 1);
   const currentService = list[currentIdx] || list[0];
   const currentServiceName = currentService?.name || "Interior Design";
@@ -1098,20 +1154,20 @@ function ServicesStrip() {
       <div className="w-full flex flex-col items-center mb-10 sm:mb-14 max-w-[1240px] mx-auto">
         {/* Eyebrow Label */}
         <div className="flex items-center justify-center gap-4 mb-6 sm:mb-8">
-          <span className="w-12 h-[1px] bg-[#D59318]/50" />
-          <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#C27A32] font-semibold flex items-center gap-2">
+          <span className="w-12 h-[1px] bg-[#F3C33D]/50" />
+          <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#F3C33D] font-semibold flex items-center gap-2">
             ✦ What We Design ✦
           </span>
-          <span className="w-12 h-[1px] bg-[#D59318]/50" />
+          <span className="w-12 h-[1px] bg-[#F3C33D]/50" />
         </div>
 
         {/* Heading */}
         <h2 className="font-serif text-[34px] sm:text-[46px] lg:text-[50px] leading-[1.15] tracking-tight text-[#252A24] text-center max-w-4xl mx-auto font-normal">
-          Spaces tailored <br className="sm:hidden" /> to the way <span className="text-[#D59318] italic font-serif">you live.</span>
+          Spaces tailored <br className="sm:hidden" /> to the way <span className="text-[#F3C33D] italic font-serif">you live.</span>
         </h2>
 
         {/* Accent thin line divider */}
-        <div className="w-16 h-[1px] bg-[#D7B98F] mt-7 mx-auto" />
+        <div className="w-16 h-[1px] bg-[#F3C33D]/60 mt-7 mx-auto" />
       </div>
 
       {/* Content Grid */}
@@ -1179,7 +1235,7 @@ function ServicesStrip() {
                         className="object-cover object-center"
                       />
                       <div className="absolute bottom-2.5 right-3 z-10 pointer-events-none">
-                        <span className="px-2.5 py-1 rounded-full bg-black/65 backdrop-blur-xs text-[10px] text-[#FAF6F0] uppercase tracking-wider font-semibold border border-[#D59318]/40">
+                        <span className="px-2.5 py-1 rounded-full bg-black/65 backdrop-blur-xs text-[10px] text-[#FAF6F0] uppercase tracking-wider font-semibold border border-[#F3C33D]/40">
                           ✦ {s.name}
                         </span>
                       </div>
@@ -1193,7 +1249,7 @@ function ServicesStrip() {
           {/* Explore all CTA */}
           <Link
             href="/portfolio"
-            className="mt-8 inline-flex items-center gap-3 text-[11px] font-bold tracking-[0.25em] text-[#D59318] hover:text-[#B87D0C] transition-colors uppercase cursor-pointer"
+            className="mt-8 inline-flex items-center gap-3 text-[11px] font-bold tracking-[0.25em] text-[#F3C33D] hover:text-[#E5B22D] transition-colors uppercase cursor-pointer"
           >
             <span>Explore All Services</span>
             <span className="transition-transform duration-300 hover:translate-x-1">→</span>
@@ -1284,8 +1340,8 @@ function ServicesStrip() {
             />
             {/* Floating Glass Pill explicitly displaying the active category name */}
             <div className="absolute bottom-3 right-4 z-30 pointer-events-none">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/65 backdrop-blur-md border border-[#D59318]/50 text-white shadow-md">
-                <span className="text-[#D59318] text-[9.5px]">✦</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/65 backdrop-blur-md border border-[#F3C33D]/50 text-white shadow-md">
+                <span className="text-[#F3C33D] text-[9.5px]">✦</span>
                 <span className="uppercase tracking-[0.18em] font-semibold text-[10.5px] text-[#FAF6F0]">
                   {currentServiceName}
                 </span>
@@ -1336,7 +1392,7 @@ function Testimonials() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  useEffect(() => {
+  const fetchTestimonials = () => {
     fetch("http://localhost:5000/api/testimonials?approved=1")
       .then((res) => res.json())
       .then((data) => {
@@ -1347,12 +1403,34 @@ function Testimonials() {
           }));
           setList(mapped);
         } else {
-          setList(testimonialsFallback);
+          setList([]);
         }
       })
-      .catch((err) => {
-        setList(testimonialsFallback);
+      .catch(() => {
+        setList([]);
       });
+  };
+
+  useEffect(() => {
+    fetchTestimonials();
+
+    const handleUpdate = () => {
+      fetchTestimonials();
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("spark_testimonials_updated", handleUpdate);
+      const handleStorage = (e: StorageEvent) => {
+        if (e.key === "spark_testimonials_updated") {
+          fetchTestimonials();
+        }
+      };
+      window.addEventListener("storage", handleStorage);
+      return () => {
+        window.removeEventListener("spark_testimonials_updated", handleUpdate);
+        window.removeEventListener("storage", handleStorage);
+      };
+    }
   }, []);
 
   const changeSlide = (idx: number) => {
@@ -1419,7 +1497,7 @@ function Testimonials() {
       quote: formQuote,
       image: uploadedImageUrl,
       avatar: uploadedImageUrl,
-      approved: 0
+      approved: 1
     };
 
     try {
@@ -1432,11 +1510,16 @@ function Testimonials() {
       });
 
       if (res.ok) {
-        setSubmitStatus("Success! Your review has been submitted for admin approval.");
+        setSubmitStatus("Thank you! Your review has been published.");
         setFormName("");
         setFormRole("");
         setFormQuote("");
         setSelectedFile(null);
+        fetchTestimonials();
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("spark_testimonials_updated"));
+          localStorage.setItem("spark_testimonials_updated", Date.now().toString());
+        }
         
         // Auto-close modal on success
         setTimeout(() => {
@@ -1454,7 +1537,139 @@ function Testimonials() {
   };
 
   if (list.length === 0) {
-    return null;
+    return (
+      <section className="relative overflow-hidden bg-[#FAF6F0] pt-10 sm:pt-12 pb-12 sm:pb-16 border-t border-[#E1D3C1]/20">
+        <div className="max-w-[1240px] mx-auto px-6 sm:px-12 lg:px-16 text-center">
+          <div className="flex items-center justify-center gap-4 mb-6 text-center">
+            <div className="h-[1px] w-12 bg-[#F3C33D]/50" />
+            <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#F3C33D] font-semibold flex items-center gap-2">
+              ✦ Client Journals ✦
+            </span>
+            <div className="h-[1px] w-12 bg-[#F3C33D]/50" />
+          </div>
+          
+          <h3 className="font-serif text-2xl sm:text-3xl text-[#252A24] font-normal mb-3">
+            Client Stories
+          </h3>
+          <p className="text-xs sm:text-sm text-neutral-500 max-w-md mx-auto mb-8 font-light">
+            Share your experience with Spark Interiors and help inspire future homeowners.
+          </p>
+
+          <button
+            onClick={() => setShowFeedbackModal(true)}
+            className="inline-flex items-center gap-2 bg-[#F3C33D] hover:bg-[#E5B22D] text-black text-[10px] sm:text-xs font-bold tracking-[0.2em] px-8 py-4 rounded-full shadow-md hover:shadow-lg transition-all duration-300 uppercase cursor-pointer"
+          >
+            <span>Write a Review</span>
+            <span className="text-xs">✍</span>
+          </button>
+        </div>
+
+        {/* Testimonial Submission Form Modal overlay */}
+        {showFeedbackModal && (
+          <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4 sm:p-6 overflow-y-auto">
+            <div
+              onClick={() => setShowFeedbackModal(false)}
+              className="absolute inset-0 bg-neutral-900/40 backdrop-blur-sm transition-opacity duration-500"
+            />
+            <div className="relative w-full max-w-[460px] bg-[#FAF6F0] border border-[#E1D3C1]/50 rounded-[36px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.2)] p-8 sm:p-10 text-left z-10 animate-blur-reveal">
+              <button
+                onClick={() => setShowFeedbackModal(false)}
+                className="absolute top-6 right-6 w-8 h-8 rounded-full border border-[#E1D3C1]/60 flex items-center justify-center bg-[#FAF6F0] hover:bg-neutral-950 hover:text-white transition-all duration-300 hover:rotate-90 active:scale-90 text-[#555B55] text-sm z-20 shadow-sm cursor-pointer"
+                aria-label="Close modal"
+              >
+                ✕
+              </button>
+
+              <div className="mb-6">
+                <span className="text-[10px] uppercase tracking-[0.25em] text-[#F3C33D] font-bold block mb-1">
+                  Feedback & Review
+                </span>
+                <h3 className="font-serif text-2xl text-[#252A24] font-normal">
+                  Share Your Experience
+                </h3>
+                <p className="text-xs text-neutral-500 mt-1">
+                  Your review helps us maintain craft excellence and inspires new clients.
+                </p>
+              </div>
+
+              {submitStatus && (
+                <div className={`p-4 rounded-2xl text-xs mb-6 ${submitStatus.startsWith("Thank") ? "bg-[#F3C33D]/10 text-neutral-800 border border-[#F3C33D]/30" : "bg-red-50 text-red-700 border border-red-200"}`}>
+                  {submitStatus}
+                </div>
+              )}
+
+              <form onSubmit={handleFormSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-[#555B55] font-semibold mb-2">
+                    Your Name <span className="text-[#F3C33D]">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                    className="w-full px-4 py-3 bg-white/70 backdrop-blur-xs border border-[#E1D3C1]/50 rounded-2xl focus:border-[#F3C33D] focus:ring-4 focus:ring-[#F3C33D]/10 focus:outline-none text-sm text-neutral-800 transition-all duration-300 placeholder:text-neutral-400"
+                    placeholder="e.g. Arun Kumar"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-[#555B55] font-semibold mb-2">
+                    Project & City <span className="text-[#F3C33D]">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formRole}
+                    onChange={(e) => setFormRole(e.target.value)}
+                    className="w-full px-4 py-3 bg-white/70 backdrop-blur-xs border border-[#E1D3C1]/50 rounded-2xl focus:border-[#F3C33D] focus:ring-4 focus:ring-[#F3C33D]/10 focus:outline-none text-sm text-neutral-800 transition-all duration-300 placeholder:text-neutral-400"
+                    placeholder="e.g. 4BHK Villa, Chennai"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-[#555B55] font-semibold mb-2">
+                    Project Image (Optional)
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        setSelectedFile(e.target.files[0]);
+                      }
+                    }}
+                    className="w-full px-4 py-2.5 bg-white/70 backdrop-blur-xs border border-[#E1D3C1]/50 rounded-2xl text-xs text-neutral-600 file:mr-4 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[10px] file:font-semibold file:bg-[#F3C33D] file:text-black hover:file:bg-[#E5B22D] file:cursor-pointer"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-[#555B55] font-semibold mb-2">
+                    Your Review <span className="text-[#F3C33D]">*</span>
+                  </label>
+                  <textarea
+                    required
+                    rows={3}
+                    value={formQuote}
+                    onChange={(e) => setFormQuote(e.target.value)}
+                    className="w-full px-4 py-3 bg-white/70 backdrop-blur-xs border border-[#E1D3C1]/50 rounded-2xl focus:border-[#F3C33D] focus:ring-4 focus:ring-[#F3C33D]/10 focus:outline-none text-sm text-neutral-800 transition-all duration-300 placeholder:text-neutral-400 resize-none"
+                    placeholder="How did Spark Interiors transform your space?"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#F3C33D] hover:bg-[#E5B22D] text-black text-[11px] sm:text-xs font-bold tracking-[0.25em] py-4 rounded-2xl shadow-md hover:shadow-lg active:scale-[0.98] transition-all duration-300 uppercase cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? "Submitting..." : "Submit Review"}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+      </section>
+    );
   }
 
   const activeItem = list[activeIndex];
@@ -1475,11 +1690,11 @@ function Testimonials() {
         
         {/* Header */}
         <div className="flex items-center justify-center gap-4 mb-16 sm:mb-20 text-center">
-          <div className="h-[1px] w-12 bg-[#D59318]/50" />
-          <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#C27A32] font-semibold flex items-center gap-2">
-            ✦ Client Journals ✦
+          <div className="h-[1px] w-12 bg-[#F3C33D]/50" />
+          <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#F3C33D] font-semibold flex items-center gap-2">
+              ✦ Client Journals ✦
           </span>
-          <div className="h-[1px] w-12 bg-[#D59318]/50" />
+          <div className="h-[1px] w-12 bg-[#F3C33D]/50" />
         </div>
 
         {/* Double-Image Collage Split Layout */}
@@ -1527,14 +1742,14 @@ function Testimonials() {
               </p>
 
               {/* Accent Line */}
-              <div className="w-12 h-[1px] bg-[#D7B98F] my-8" />
+              <div className="w-12 h-[1px] bg-[#F3C33D]/60 my-8" />
 
               {/* Identity */}
               <div className="flex flex-col">
                 <h4 className="font-serif text-lg sm:text-[21px] text-[#252A24] font-normal leading-tight">
                   {activeItem.name}
                 </h4>
-                <p className="text-[11px] sm:text-xs uppercase tracking-[0.25em] text-[#D59318] font-semibold mt-2.5">
+                <p className="text-[11px] sm:text-xs uppercase tracking-[0.25em] text-[#F3C33D] font-semibold mt-2.5">
                   {activeItem.project}
                 </p>
               </div>
@@ -1544,14 +1759,14 @@ function Testimonials() {
             <div className="flex flex-wrap items-center justify-between gap-6 mt-12 sm:mt-16 w-full">
               <div className="flex items-center gap-6">
                 {/* Pagination text indicator */}
-                <span className="font-serif text-sm text-[#C27A32] tracking-wider font-light">
+                <span className="font-serif text-sm text-[#F3C33D] tracking-wider font-light">
                   {String(activeIndex + 1).padStart(2, "0")} <span className="text-[#E1D3C1]/60 mx-1">/</span> {String(list.length).padStart(2, "0")}
                 </span>
 
                 {/* Pagination line progress */}
                 <div className="flex-1 min-w-[80px] sm:min-w-[120px] h-[1px] bg-[#E1D3C1]/50 relative overflow-hidden">
                   <div 
-                    className="absolute top-0 left-0 h-full bg-[#D59318] transition-all duration-[600ms] ease-in-out"
+                    className="absolute top-0 left-0 h-full bg-[#F3C33D] transition-all duration-[600ms] ease-in-out"
                     style={{ width: `${((activeIndex + 1) / list.length) * 100}%` }}
                   />
                 </div>
@@ -1560,14 +1775,14 @@ function Testimonials() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handlePrev}
-                    className="w-10 h-10 rounded-full border border-[#E1D3C1]/50 flex items-center justify-center text-[#C27A32] text-xs hover:border-[#D59318] hover:bg-[#D59318]/5 transition-all duration-300 active:scale-95 cursor-pointer"
+                    className="w-10 h-10 rounded-full border border-[#E1D3C1]/50 flex items-center justify-center text-[#F3C33D] text-xs hover:border-[#F3C33D] hover:bg-[#F3C33D]/5 transition-all duration-300 active:scale-95 cursor-pointer"
                     aria-label="Previous journal entry"
                   >
                     ←
                   </button>
                   <button
                     onClick={handleNext}
-                    className="w-10 h-10 rounded-full border border-[#E1D3C1]/50 flex items-center justify-center text-[#C27A32] text-xs hover:border-[#D59318] hover:bg-[#D59318]/5 transition-all duration-300 active:scale-95 cursor-pointer"
+                    className="w-10 h-10 rounded-full border border-[#E1D3C1]/50 flex items-center justify-center text-[#F3C33D] text-xs hover:border-[#F3C33D] hover:bg-[#F3C33D]/5 transition-all duration-300 active:scale-95 cursor-pointer"
                     aria-label="Next journal entry"
                   >
                     →
@@ -1578,10 +1793,10 @@ function Testimonials() {
               {/* Add Testimonial Trigger Button */}
               <button
                 onClick={() => setShowFeedbackModal(true)}
-                className="bg-[#D59318] hover:bg-[#B87D0C] text-white text-[10px] sm:text-xs font-bold tracking-[0.2em] px-6 py-3.5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 uppercase cursor-pointer flex items-center gap-2"
+                className="bg-[#F3C33D] hover:bg-[#E5B22D] text-black text-[10px] sm:text-xs font-bold tracking-[0.2em] px-6 py-3.5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 uppercase cursor-pointer flex items-center gap-2"
               >
                 <span>Write a Review</span>
-                <span className="text-xs">✍</span>
+            <span className="text-xs">✍</span>
               </button>
             </div>
 
@@ -1611,9 +1826,9 @@ function Testimonials() {
               </button>
 
               <div className="text-center mb-8 mt-2">
-                <span className="text-[#D59318] text-xs font-semibold block mb-2 tracking-[0.3em]">✦ JOIN OUR JOURNAL ✦</span>
+                <span className="text-[#F3C33D] text-xs font-semibold block mb-2 tracking-[0.3em]">✦ JOIN OUR JOURNAL ✦</span>
                 <h3 className="font-serif text-3xl text-neutral-900 font-normal">
-                  Share your <span className="text-[#D59318] italic font-serif font-medium">experience.</span>
+                  Share your <span className="text-[#F3C33D] italic font-serif font-medium">experience.</span>
                 </h3>
                 <p className="text-neutral-500 text-[13px] mt-2.5 font-light leading-relaxed">
                   We would love to hear how your design journey went.
@@ -1630,8 +1845,8 @@ function Testimonials() {
                     required
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
-                    className="w-full px-4 py-3.5 bg-white/70 backdrop-blur-xs border border-[#E1D3C1]/50 rounded-2xl focus:border-[#D59318] focus:ring-4 focus:ring-[#D59318]/10 focus:outline-none text-sm text-neutral-800 transition-all duration-300 placeholder:text-neutral-400"
-                    placeholder="e.g. Rahul Sharma"
+                    className="w-full px-4 py-3.5 bg-white/70 backdrop-blur-xs border border-[#E1D3C1]/50 rounded-2xl focus:border-[#F3C33D] focus:ring-4 focus:ring-[#F3C33D]/10 focus:outline-none text-sm text-neutral-800 transition-all duration-300 placeholder:text-neutral-400"
+                    placeholder="e.g. Arun Kumar"
                   />
                 </div>
 
@@ -1644,7 +1859,7 @@ function Testimonials() {
                     required
                     value={formRole}
                     onChange={(e) => setFormRole(e.target.value)}
-                    className="w-full px-4 py-3.5 bg-white/70 backdrop-blur-xs border border-[#E1D3C1]/50 rounded-2xl focus:border-[#D59318] focus:ring-4 focus:ring-[#D59318]/10 focus:outline-none text-sm text-neutral-800 transition-all duration-300 placeholder:text-neutral-400"
+                    className="w-full px-4 py-3.5 bg-white/70 backdrop-blur-xs border border-[#E1D3C1]/50 rounded-2xl focus:border-[#F3C33D] focus:ring-4 focus:ring-[#F3C33D]/10 focus:outline-none text-sm text-neutral-800 transition-all duration-300 placeholder:text-neutral-400"
                     placeholder="e.g. Kitchen Renovation, Chennai"
                   />
                 </div>
@@ -1667,7 +1882,7 @@ function Testimonials() {
                     />
                     <label
                       htmlFor="testimonial-image-upload"
-                      className="w-full flex items-center justify-between px-4 py-3.5 bg-white/70 backdrop-blur-xs border border-[#E1D3C1]/50 rounded-2xl cursor-pointer hover:border-[#D59318] transition-all duration-300 text-sm text-neutral-500"
+                      className="w-full flex items-center justify-between px-4 py-3.5 bg-white/70 backdrop-blur-xs border border-[#E1D3C1]/50 rounded-2xl cursor-pointer hover:border-[#F3C33D] transition-all duration-300 text-sm text-neutral-500"
                     >
                       <span className="truncate max-w-[280px]">
                         {selectedFile ? selectedFile.name : "Choose an image of your space..."}
@@ -1686,7 +1901,7 @@ function Testimonials() {
                     rows={4}
                     value={formQuote}
                     onChange={(e) => setFormQuote(e.target.value)}
-                    className="w-full px-4 py-3.5 bg-white/70 backdrop-blur-xs border border-[#E1D3C1]/50 rounded-2xl focus:border-[#D59318] focus:ring-4 focus:ring-[#D59318]/10 focus:outline-none text-sm text-neutral-800 transition-all duration-300 placeholder:text-neutral-400 resize-none"
+                    className="w-full px-4 py-3.5 bg-white/70 backdrop-blur-xs border border-[#E1D3C1]/50 rounded-2xl focus:border-[#F3C33D] focus:ring-4 focus:ring-[#F3C33D]/10 focus:outline-none text-sm text-neutral-800 transition-all duration-300 placeholder:text-neutral-400 resize-none"
                     placeholder="How did Spark Interiors transform your space?"
                   />
                 </div>
@@ -1700,7 +1915,7 @@ function Testimonials() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[#D59318] hover:bg-[#B87D0C] text-white text-[11px] sm:text-xs font-bold tracking-[0.25em] py-4 rounded-2xl shadow-[0_12px_30px_-5px_rgba(213, 147, 24,0.25)] hover:shadow-[0_15px_35px_-5px_rgba(213, 147, 24,0.35)] active:scale-[0.98] transition-all duration-300 uppercase cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full bg-[#F3C33D] hover:bg-[#E5B22D] text-black text-[11px] sm:text-xs font-bold tracking-[0.25em] py-4 rounded-2xl shadow-[0_12px_30px_-5px_rgba(243,195,61,0.25)] hover:shadow-[0_15px_35px_-5px_rgba(243,195,61,0.35)] active:scale-[0.98] transition-all duration-300 uppercase cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? "Submitting..." : "Submit Review"}
                 </button>
@@ -1757,16 +1972,16 @@ function FAQ() {
         {/* Header */}
         <div className="flex flex-col items-center mb-16 text-center">
           <div className="flex items-center justify-center gap-4 mb-4">
-            <span className="w-12 h-[1px] bg-[#D59318]/50" />
-            <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#C27A32] font-semibold flex items-center gap-2">
+            <span className="w-12 h-[1px] bg-[#F3C33D]/50" />
+            <span className="text-[11px] sm:text-xs uppercase tracking-[0.35em] text-[#F3C33D] font-semibold flex items-center gap-2">
               ✦ FAQ ✦
             </span>
-            <span className="w-12 h-[1px] bg-[#D59318]/50" />
+            <span className="w-12 h-[1px] bg-[#F3C33D]/50" />
           </div>
           <h2 className="font-serif text-[32px] sm:text-[40px] leading-tight text-[#252A24] font-normal mt-4">
             Common Inquiries
           </h2>
-          <div className="w-10 h-[1px] bg-[#D7B98F] mt-6" />
+          <div className="w-10 h-[1px] bg-[#F3C33D]/60 mt-6" />
         </div>
 
         {/* Accordion Stack */}
@@ -1785,14 +2000,14 @@ function FAQ() {
                   <div className="flex items-center flex-1">
                     {/* Question text */}
                     <h3 className={`font-serif text-lg sm:text-[21px] transition-all duration-300 leading-snug pr-4 ${
-                      isOpen ? "text-[#D59318] font-medium" : "text-[#252A24] hover:text-[#D59318]/80"
+                      isOpen ? "text-[#F3C33D] font-medium" : "text-[#252A24] hover:text-[#F3C33D]/80"
                     }`}>
                       {item.q}
                     </h3>
                   </div>
                   {/* Plus/Close Icon */}
                   <span className={`text-2xl font-light transition-all duration-300 mr-2 ${
-                    isOpen ? "rotate-45 text-[#D59318]" : "text-[#E1D3C1] group-hover:text-neutral-500"
+                    isOpen ? "rotate-45 text-[#F3C33D]" : "text-[#E1D3C1] group-hover:text-neutral-500"
                   }`}>
                     +
                   </span>
@@ -1846,12 +2061,12 @@ function ClosingCTA() {
               {/* Left Column: Eyebrow + Modern Headline */}
               <div className="text-center md:text-left">
                 <div className="flex items-center justify-center md:justify-start gap-2 mb-1.5">
-                  <span className="w-4 h-[1px] bg-[#D59318]" />
+                  <span className="w-4 h-[1px] bg-[#F3C33D]" />
                   <span className="text-[#F3C33D] text-[10px]">✦</span>
                   <span className="text-[10px] uppercase tracking-[0.28em] text-[#F3C33D] font-bold">
                     Designed for Living
                   </span>
-                  <span className="w-4 h-[1px] bg-[#D59318]" />
+                  <span className="w-4 h-[1px] bg-[#F3C33D]" />
                 </div>
                 <h3 className="font-serif text-lg sm:text-2xl text-white font-normal tracking-tight">
                   Thoughtful details. <span className="italic font-serif text-[#F3C33D]">Timeless modern luxury.</span>

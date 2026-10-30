@@ -116,7 +116,7 @@ export default function HeroBanner() {
   return (
     <section
       id="home"
-      className="relative w-full h-[calc(100vh-85px)] mt-[85px] min-h-[550px] max-h-[1050px] overflow-hidden bg-black select-none group"
+      className="relative w-full h-screen min-h-[600px] max-h-[1080px] overflow-hidden bg-black select-none group"
     >
 
       {/* =========================================================
@@ -140,19 +140,6 @@ export default function HeroBanner() {
               <source src={config.videoUrl || "/videos/hero-banner.mp4"} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-
-            {/* Video Watermark Logo — Bottom-Left Signature Placement */}
-            <div className="absolute bottom-6 left-6 sm:bottom-8 sm:left-10 lg:bottom-10 lg:left-12 z-20 pointer-events-none select-none flex items-center drop-shadow-[0_4px_20px_rgba(0,0,0,0.85)] opacity-80 hover:opacity-100 transition-opacity">
-              <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20">
-                <Image
-                  src="/spark-logo-transparent.png"
-                  alt="Spark Interiors Watermark"
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </div>
-            </div>
           </div>
         ) : (
           /* Full-Bleed Luxury Interior Image — full brightness */
@@ -168,14 +155,16 @@ export default function HeroBanner() {
           </div>
         )}
 
+        
+
       </div>
 
       {/* =========================================================
           PURE FLOATING CINEMATIC TYPOGRAPHY — Dynamic Luxury Transition
           100% Unobstructed Video — Elevated in airy upper zone
       ========================================================= */}
-      <div className="absolute inset-x-0 top-12 sm:top-16 lg:top-20 z-20 pointer-events-none flex flex-col items-center text-center px-6 select-none animate-hero-float">
-        <p className="animate-hero-slide-up animate-hero-delay-1 text-[10px] sm:text-xs uppercase tracking-[0.45em] text-[#021A26] font-extrabold drop-shadow-[0_1px_8px_rgba(255,255,255,0.7)] drop-shadow-[0_2px_14px_rgba(0,0,0,0.35)] mb-2 sm:mb-3">
+      <div className="absolute inset-x-0 top-24 sm:top-28 lg:top-32 z-20 pointer-events-none flex flex-col items-center text-center px-6 select-none animate-hero-float">
+        <p className="animate-hero-slide-up animate-hero-delay-1 text-[10px] sm:text-xs uppercase tracking-[0.45em] text-[#1C4464] font-extrabold drop-shadow-[0_1px_8px_rgba(255,255,255,0.85)] drop-shadow-[0_2px_14px_rgba(0,0,0,0.45)] mb-2 sm:mb-3">
           ✦ Interior Architecture &amp; Design ✦
         </p>
         <h1 className="animate-hero-slide-up animate-hero-delay-2 font-serif text-[32px] sm:text-[48px] lg:text-[58px] text-white font-normal leading-[1.14] tracking-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.95)] max-w-3xl">
@@ -185,13 +174,13 @@ export default function HeroBanner() {
             <>
               Crafting spaces with{" "}
               <span
-                className={`inline-block italic font-serif text-[#021A26] transition-all duration-500 ease-out transform font-semibold ${
+                className={`inline-block italic font-serif text-[#F3C33D] transition-all duration-500 ease-out transform font-semibold ${
                   isTransitioning
                     ? "opacity-0 -translate-y-2.5 scale-95 blur-[2px]"
                     : "opacity-100 translate-y-0 scale-100 blur-0"
                 }`}
                 style={{
-                  textShadow: "0 1px 10px rgba(255, 255, 255, 0.75), 0 0 2px rgba(255, 255, 255, 0.9), 0 4px 20px rgba(2, 26, 38, 0.4)"
+                  textShadow: "0 2px 16px rgba(0, 0, 0, 0.95), 0 0 25px rgba(243, 195, 61, 0.35)"
                 }}
               >
                 {ROTATING_PHRASES[phraseIndex]}
